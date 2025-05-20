@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
+/*   By: sellith <sellith@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:02:57 by azhao             #+#    #+#             */
-/*   Updated: 2025/05/16 00:49:46 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/19 18:35:16 by sellith          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	ft_env(char **cmd, char **env)
 	int		i;
 
 	i = 0;
-	if (!env && ft_strlen(env[0]) == 0)
+	if (!env && !(*env)[0])
 		return (0);
 	if (cmd[1] && cmd[1][0] == '-')
 		return (ft_printf("%e", ENV_OPT_ERR), 125);

@@ -3,34 +3,44 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
+/*   By: sellith <sellith@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 22:38:23 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/16 05:54:33 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/20 03:32:33 by sellith          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.functions.h"
+#include "minishell.functions.h"
 
-static char	*usr_to_tilde(char *pwd)
+static char	*usr_to_tilde(t_shell *data, char *pwd)
 {
 	char	*buffer;
 	int		skiplen;
 	int		cwdlen;
-	int		skip;
+	int		homelen;
 
 	cwdlen = ft_strlen(pwd);
-	skip = 6;
-	if (ft_strncmp(pwd, "PWD=", 4) == 0)
-		skip = 10;
-	if (cwdlen <= skip)
-		return (ft_strdup(pwd));
-	skiplen = ft_strlen_til_char(pwd + skip, '/') + skip;
-	buffer = ft_strjoin("~", pwd + skiplen);
+	if (data->home)
+	{
+		homelen = ft_strlen(data->home);
+		if (data->home[homelen - 1] == '/')
+			homelen--;
+		if (cwdlen < homelen)
+			return (ft_strdup(pwd));
+		buffer = ft_strjoin("~", pwd + homelen);
+	}
+	else
+	{
+		homelen = 6;
+		if (cwdlen <= homelen)
+			return (ft_strdup(pwd));
+		skiplen = ft_strlen_til_char(pwd + homelen, '/') + homelen;
+		buffer = ft_strjoin("~", pwd + skiplen);
+	}
 	return (buffer);
 }
 
-static char	*make_prompt(char *pwd)
+static char	*make_prompt(t_shell *data)
 {
 	char	*buffer;
 	char	*tmp;
@@ -39,7 +49,7 @@ static char	*make_prompt(char *pwd)
 	buffer = ft_strdjoining(buffer, "[", PPL);
 	buffer = ft_strdjoining(buffer, "Foxy's Munch", WTH);
 	buffer = ft_strdjoining(buffer, "]-[", GRN);
-	tmp = usr_to_tilde(pwd);
+	tmp = usr_to_tilde(data, data->pwd);
 	if (!tmp)
 		return (NULL);
 	buffer = ft_strdjoining(buffer, tmp, WTH);
@@ -50,7 +60,7 @@ static char	*make_prompt(char *pwd)
 
 static void	prompt_rl(t_shell *data)
 {
-	data->prompt = make_prompt(data->pwd);
+	data->prompt = make_prompt(data);
 	if (!data->prompt)
 		return ;
 	init_signals(S_INTERACTIVE);
@@ -100,15 +110,13 @@ static void	shell_lvl(t_shell *data)
 	(free(buffer), free(tmp));
 }
 
-int	main(int argc, char **argv)
+int	main(int argc, char **argv, char **envp)
 {
 	t_shell	data;
-	char **envp;
 
 	(void)argv;
 	if (argc != 1)
 		return (ft_printf("%s", ERR_ARGS), 0);
-	envp = NULL;
 	initdata(&data);
 	if (envp)
 	{
@@ -117,13 +125,15 @@ int	main(int argc, char **argv)
 			return (1);
 	}
 	init_pwd(&data);
-	data.exitstatus = 0;
 	shell_lvl(&data);
 	last_cmd_status(&data);
-	data.path = get_path(data.envp);
-	if (!data.path)
-		return (ft_freeall("%d%S", &data.envp, &data.ut), 1);
 	while (1)
+	{
+		data.path = get_path(&data, data.envp);
+		if (!data.path)
+			return (ft_freeall("%d%S", &data.envp, &data.ut), 1);
+		get_home(&data, data.envp);
 		prompt_rl(&data);
+	}
 	return (0);
 }

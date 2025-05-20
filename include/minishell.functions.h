@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.functions.h                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
+/*   By: sellith <sellith@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 21:20:22 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/16 04:43:22 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/20 04:07:13 by sellith          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,9 @@ bool	init_pwd(t_shell *data);
 bool	is_token(char c);
 bool	is_envable(char c);
 void	exit_sig(t_shell *data);
-char	**get_path(char **envp);
+void	get_home(t_shell *data, char **envp);
+char	**get_path(t_shell *data, char **envp);
+int 	search_env_var(char **envp, char *var);
 
 /*debug functions*/
 
@@ -68,6 +70,7 @@ char	*rm_from_line(t_shell *dt, char *line);
 
 int		do_export(char ***envp, char *str);
 int		ft_export(char	***envp, char **cmd);
+int 	ft_unset(char **cmd, t_shell *data);
 int		ft_pwd(t_shell *data, char **cmd);
 int		ft_cd(char **cmd, t_shell *data);
 int		ft_env(char **cmd, char **env);

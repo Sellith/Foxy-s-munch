@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   next_pipe.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
+/*   By: sellith <sellith@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 03:52:34 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/15 21:24:33 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/19 18:37:52 by sellith          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static int	child_rl(t_shell *data, int w_fd)
 
 	init_signals(S_HEREDOC);
 	buffer = readline("> ");
-	while (buffer && ft_strlen(buffer) == 0 && g_sig != 130)
+	while (buffer && !*buffer && g_sig != 130)
 	{
 		free(buffer);
 		buffer = readline("> ");

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
+/*   By: sellith <sellith@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 08:33:35 by azhao             #+#    #+#             */
-/*   Updated: 2025/05/16 03:42:05 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/19 23:24:22 by sellith          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,20 +30,14 @@ static bool	init_cwd(t_shell *data, char ***envp)
 	i = 0;
 	while ((*envp)[i] && ft_strncmp((*envp)[i], "PWD=", 4) != 0)
 		i++;
-	if (!(*envp)[i] && !data->pwd)
+	if (!(*envp)[i])
 	{
 		data->pwd = get_cwd(data->pwd);
 		buffer = ft_strjoin("PWD=", data->pwd);
 		*envp = ft_addtoda(*envp, buffer);
 	}
-	else if (!(*envp)[i] && data->pwd)
-		;
 	else
-	{
-		if (data->pwd)
-			free(data->pwd);
-		data->pwd = ft_strdup((*envp)[i]);
-	}
+		data->pwd = ft_strdup(((*envp)[i]) + 4);
 	return (true);
 }
 
@@ -51,18 +45,12 @@ static void	init_old_cwd(t_shell *data, char **envp)
 {
 	int	i;
 
-	i = 0;
-	while (envp[i] && ft_strncmp(envp[i], "OLDPWD=", 7) != 0)
-		i++;
-	if (!envp[i] && !data->old_pwd)
-		data->old_pwd = ft_strdup("");
-	else if (!envp[i] && data->old_pwd)
-		;
-	else
+	i = search_env_var(data->envp, "OLDPWD=");
+	if (i != -1)
 	{
 		if (data->old_pwd)
 			free(data->old_pwd);
-		data->old_pwd = ft_strdup(envp[i]);
+		data->old_pwd = ft_strdup((envp[i]) + 7);
 	}
 }
 
@@ -81,10 +69,10 @@ bool	init_pwd(t_shell *data)
 	{
 		data->pwd = get_cwd(data->pwd);
 		buffer = ft_strjoin("PWD=", data->pwd);
-		data->envp = ft_addtoda(data->envp, buffer);
+		do_export(&data->envp, buffer);
 		if (!data->envp)
 			return (false);
-		data->old_pwd = ft_strdup("");
+		data->old_pwd = NULL;
 		if (!data->old_pwd)
 			return (false);
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   err_msg.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
+/*   By: sellith <sellith@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 23:17:37 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/15 23:47:12 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/20 04:09:40 by sellith          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,5 +33,6 @@ void	errhdlg(t_shell *data, t_ctn *ctn, int err)
 			data->exitstatus = 128 + err;
 		perror(ctn->cmd_ctn[0]);
 	}
+	ft_freeall("%d", &ctn->cmd_ctn);
 	so_long_exec(data, data->exitstatus, msg);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
+/*   By: sellith <sellith@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 02:12:12 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/16 05:51:00 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/19 23:37:51 by sellith          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,20 +33,20 @@ static int	update_path(char *newpwd, t_shell *data)
 {
 	char	*buffer;
 
+	if (!newpwd)
+		return (1);
 	buffer = ft_strjoin(CD_STD_ERR, newpwd);
 	if (!buffer)
 		return (1);
 	if (chdir(newpwd) == -1)
 		return (perror(buffer), ft_freeall("%s%s", &buffer, &newpwd), 1);
-	ft_str_reset(&newpwd);
+	ft_freeall("%s%s", &buffer, &newpwd);
 	if (update_old_path(data))
 		return (1);
 	ft_str_reset(&data->pwd);
 	data->pwd = getcwd(NULL, PATH_MAX);
 	if (!data->pwd)
 		return (1);
-	ft_printf("%s\n", data->pwd);
-	ft_str_reset(&buffer);
 	buffer = ft_strjoin("PWD=", data->pwd);
 	if (!buffer)
 		return (1);
@@ -57,47 +57,39 @@ static int	update_path(char *newpwd, t_shell *data)
 	return (0);
 }
 
-static bool	search_env_var(char **envp, char *var)
+static char	*tilde_to_usr(t_shell *data)
 {
-	int	len;
-	int	i;
-
-	len = ft_strlen(var);
-	if (len == 0)
-		return (false);
-	i = 0;
-	while (envp[i] && ft_strncmp(envp[i], var, len) != 0)
-		i++;
-	if (!envp[i])
-		return (false);
-	return (true);
+	if (data->home)
+		return (ft_strdup(data->home));
+	ft_printf("%e", "error: $HOME not defined in Foxy's munch");
+	return (NULL);
 }
 
 int	ft_cd(char **cmd, t_shell *data)
 {
 	char	*buffer;
-	int		i;
 
-	if (ft_darraylen(cmd) == 2)
+	if (ft_darraylen(cmd) <= 2)
 	{
-		if (cmd[1][0] == '-')
+		if (cmd[1] && cmd[1][0] == '-')
 		{
-			i = 0;
-			if (!search_env_var(data->envp, "OLDPWD="))
+			if (search_env_var(data->envp, "OLDPWD=") == -1 && !data->old_pwd)
 				return (ft_printf("%e", CD_OLD_NOT_SET_ERR), 1);
+			ft_printf("%s\n", data->old_pwd);
 			return (update_path(ft_strdup(data->old_pwd), data));
 		}
 		else
 		{
-			if (cmd[1][0] != '/')
+			if (ft_darraylen(cmd) == 1)
+				buffer = ft_strdup("/");
+			else if (cmd[1][0] != '/' && cmd[1][0] != '~')
 				buffer = ft_strdjoin(data->pwd, "/", cmd[1]);
+			else if (cmd[1][0] == '~')
+				buffer = tilde_to_usr(data);
 			else
 				buffer = ft_strdup(cmd[1]);
-			if (!buffer)
-				return (1);
 			return (update_path(buffer, data));
 		}
 	}
-	ft_printf("%e", CD_ARGS_ERR);
-	return (1);
+	return (ft_printf("%e", CD_ARGS_ERR), 1);
 }

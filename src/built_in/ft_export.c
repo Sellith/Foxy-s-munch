@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
+/*   By: sellith <sellith@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 23:25:15 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/16 04:43:08 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/19 18:36:28 by sellith          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static int	export_env(char **env)
 	int		i;
 
 	i = 0;
-	if (!env && ft_strlen(env[0]) == 0)
+	if (!env && (*env)[0])
 		return (0);
 	while (env[i])
 	{

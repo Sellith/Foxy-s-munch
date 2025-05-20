@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.defines.h                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
+/*   By: sellith <sellith@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 22:40:43 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/15 22:39:50 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/17 22:13:39 by sellith          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,13 +115,14 @@ typedef struct s_shell
 	char	**envp;
 	char	**path;
 	char	*line;
-	char	*prompt;
-	char	*old_pwd;
-	char	*pwd;
 	int		lsize;
 	int		pipes;
 	int		exitstatus;
 	int		stdin_clone;
+	char	*home;
+	char	*prompt;
+	char	*pwd;
+	char	*old_pwd;
 	t_pid	*pid;
 	t_mlst	*mlst;
 	t_utils	*ut;

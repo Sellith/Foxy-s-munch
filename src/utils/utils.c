@@ -3,21 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
+/*   By: sellith <sellith@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 17:35:59 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/15 21:24:33 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/20 03:32:51 by sellith          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.functions.h"
 
-char	**get_path(char **envp)
+char	**get_path(t_shell *data, char **envp)
 {
 	char	**path;
 	int		i;
 
 	i = 0;
+	ft_darray_reset(&data->path);
 	while (envp[i] && ft_strncmp(envp[i], "PATH=", 5) != 0)
 		i++;
 	if (!envp[i])
@@ -43,32 +44,41 @@ void	closefds(int fd[2], int pid)
 		close(fd[WRITE]);
 }
 
-static void	close_n_dup_child(t_mlst *lst, t_ctn *ctn, int p_fd[2])
+int	search_env_var(char **envp, char *var)
 {
-	int	nullfd;
+	int	len;
+	int	i;
 
-	nullfd = open("/dev/null", O_RDWR);
-	close(p_fd[READ]);
-	if ((lst->rdir[INF] == NUL && lst->prev && lst->prev->rdir[OUT] != NUL)
-		|| (lst->prev && lst->prev->ctn->inf_fd == -1))
-		dup2(nullfd, STDIN_FILENO);
-	if (lst->rdir[OUT] != NUL)
-	{
-		dup2(ctn->outf_fd, STDOUT_FILENO);
-		ft_close(&ctn->outf_fd);
-	}
-	else if (!lst->lstcmd)
-		dup2(p_fd[WRITE], STDOUT_FILENO);
-	close(p_fd[WRITE]);
-	ft_close(&nullfd);
+	len = ft_strlen(var);
+	if (len == 0)
+		return (-1);
+	i = 0;
+	while (envp[i] && ft_strncmp(envp[i], var, len) != 0)
+		i++;
+	if (!envp[i])
+		return (-1);
+	return (i);
 }
 
-void	close_n_dup(t_mlst *lst, t_ctn *ctn, int p_fd[2], int tmpid)
+void	get_home(t_shell *data, char **envp)
 {
-	if (tmpid == 0)
-		return (close_n_dup_child(lst, ctn, p_fd));
-	close(p_fd[WRITE]);
-	if (lst->rdir[OUT] == NUL && !lst->lstcmd)
-		dup2(p_fd[READ], STDIN_FILENO);
-	close(p_fd[READ]);
+	char	*buffer;
+	int		i;
+
+	ft_str_reset(&data->home);
+	i = search_env_var(envp, "HOME=");
+	if (i == -1)
+	{
+		buffer = getcwd(NULL, PATH_MAX);
+		if (ft_strlen(buffer) > 5)
+		{
+			data->home = ft_strndup(buffer, ft_strlen_til_char(buffer + 6, '/') + 6);
+			ft_str_reset(&buffer);
+			return ;
+		}
+		data->home = NULL;
+		return ;
+	}
+	data->home = ft_strdup((envp)[i] + 5);
+	return ;
 }

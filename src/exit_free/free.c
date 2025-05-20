@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
+/*   By: sellith <sellith@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/25 02:58:22 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/15 21:24:33 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/20 02:12:53 by sellith          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,8 @@ void	freerdoc(t_shell *data, t_mlst *new)
 
 void	freerpipe(t_shell *data)
 {
-	free(data->prompt);
-	if (data->envp)
-		ft_freedarray(data->envp);
-	if (data->line)
-		ft_str_reset(&data->line);
+	ft_freeall("%s%s%d%d", &data->prompt, &data->line, &data->envp, 
+		&data->path);
 	if (data->mlst)
 		freemlst(data->mlst);
 	if (data->ut)
@@ -47,8 +44,6 @@ void	freerpipe(t_shell *data)
 		reinit_ut(data->ut);
 		free(data->ut);
 	}
-	if (data->path)
-		ft_freedarray(data->path);
 	rl_clear_history();
 }
 
@@ -60,8 +55,7 @@ void	freelst(t_arg *arg)
 	while (arg)
 	{
 		tmp = arg->next;
-		ft_str_reset(&arg->ctn);
-		free(arg);
+		ft_freeall("%s%m", &arg->ctn, &arg);
 		arg = tmp;
 	}
 	arg = NULL;
@@ -79,8 +73,7 @@ void	freemlst(t_mlst *mlst)
 			freelst(mlst->cmd);
 		if (mlst->eof)
 		{
-			if (mlst->hd)
-				free(mlst->hd);
+			ft_str_reset(&mlst->hd);
 			freelst(mlst->eof);
 		}
 		if (mlst->inf)
@@ -89,9 +82,7 @@ void	freemlst(t_mlst *mlst)
 			freelst(mlst->append);
 		if (mlst->trunc)
 			freelst(mlst->trunc);
-		if (mlst->ctn)
-			free(mlst->ctn);
-		free(mlst);
+		ft_freeall("%m%m", &mlst->ctn, &mlst);
 		mlst = tmp;
 	}
 }

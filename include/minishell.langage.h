@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.langage.h                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
+/*   By: sellith <sellith@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 21:31:29 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/16 04:04:34 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/19 21:32:46 by sellith          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@ wanted : \033[0m"
 # define CD_NOT_IN_PWD "Foxy's munch: cd: no such file or directory: "
 # define CD_ARGS_ERR "Foxy's munch: cd: too many arguments"
 # define CD_OLD_NOT_SET_ERR "Foxy's munch: cd: OLDPWD not set"
+# define UNSET_OPT_ERR "Foxy's munch: unset takes no option\nunset: \
+usage: unset [name ...]"
 
 /* colour definition */
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
+/*   By: sellith <sellith@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 23:27:36 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/16 02:04:35 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/20 04:01:50 by sellith          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static void	cmd_dupcheck(t_arg *current, char ***cmd)
 	i = 0;
 	while (current)
 	{
-		while (current && ft_strlen(current->ctn) == 0)
+		while (current && !current->ctn[0])
 		{
 			current = current->next;
 			if (!current)
@@ -99,7 +99,7 @@ void	minishell(t_shell *data, t_mlst *lst)
 	if (data->pipes == 0 && bt != BINARY)
 	{
 		current->ctn->cmd_ctn = ft_ltoda(current->cmd);
-		return (execbt(data, lst, lst->ctn, bt));
+		return (execbt(data, current, current->ctn, bt));
 	}
 	data->stdin_clone = dup(STDIN_FILENO);
 	while (current)

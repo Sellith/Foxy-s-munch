@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execbt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
+/*   By: sellith <sellith@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 22:15:31 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/16 06:04:25 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/20 01:39:18 by sellith          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ static void	bt_select(t_shell *data, char **cmd, t_btins type)
 		data->exitstatus = ft_pwd(data, cmd);
 	else if (type == BT_EXPORT)
 		data->exitstatus = ft_export(&data->envp, cmd);
-	// else if (type == BT_UNSET)
-	// 	data->exitstatus = ft_unset();
+	else if (type == BT_UNSET)
+		data->exitstatus = ft_unset(cmd, data);
 }
 
 static bool	init_bt_exec(t_shell *data, t_mlst *lst, int tmp_std[2])
