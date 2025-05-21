@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sellith <sellith@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 23:27:36 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/20 04:01:50 by sellith          ###   ########.fr       */
+/*   Updated: 2025/05/20 18:56:24 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,13 +95,15 @@ void	minishell(t_shell *data, t_mlst *lst)
 	t_mlst	*current;
 
 	current = lst;
-	bt = is_b_in(current->cmd->ctn);
-	if (data->pipes == 0 && bt != BINARY)
+	if (lst->cmd)
+		bt = is_b_in(current->cmd->ctn);
+	else
+		bt = BT_NULL;
+	if (data->pipes == 0 && bt != BT_NULL && bt != BINARY)
 	{
 		current->ctn->cmd_ctn = ft_ltoda(current->cmd);
 		return (execbt(data, current, current->ctn, bt));
 	}
-	data->stdin_clone = dup(STDIN_FILENO);
 	while (current)
 	{
 		current->ctn->cmd_ctn = ft_ltoda(current->cmd);
@@ -112,7 +114,6 @@ void	minishell(t_shell *data, t_mlst *lst)
 		}
 		current = current->next;
 	}
-	dup2(data->stdin_clone, STDIN_FILENO);
-	close(data->stdin_clone);
+	ft_dup_close(data->stdin_clone, STDIN_FILENO);
 	waitall(&data->pid, &data->exitstatus);
 }

@@ -6,7 +6,7 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 15:30:23 by azhao             #+#    #+#             */
-/*   Updated: 2025/05/16 00:49:07 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/21 02:52:21 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ bool	check_newline(char *str)
 	if (str && str[i] && str[i] == '-')
 	{
 		i++;
+		if (!str[i])
+			return (true);
 		while (str[i] && str[i] == 'n')
 			i++;
 		if (i == ft_strlen(str))

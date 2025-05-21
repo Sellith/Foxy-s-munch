@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sellith <sellith@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 23:25:15 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/19 18:36:28 by sellith          ###   ########.fr       */
+/*   Updated: 2025/05/21 02:51:05 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static int	export_env(char **env)
 			i++;
 		if (!env[i])
 			return (0);
-		if ((write(STDOUT_FILENO, "export", 6)) == -1)
+		if ((write(STDOUT_FILENO, "export ", 7)) == -1)
 			return (perror(EXPORT_WRITE_ERR), 1);
 		if (write(STDOUT_FILENO, env[i], ft_strlen(env[i])) == -1)
 			return (perror(EXPORT_WRITE_ERR), 1);
@@ -64,7 +64,7 @@ static bool	conditions(char *str)
 		tmp = ft_strndup(str, ft_strlen_til_char(str, '='));
 		buffer = ft_strjoin(IDENTIFIER_ERR, tmp);
 		ft_printf("%e", buffer);
-		return (ft_freeall("%s%s", tmp, buffer), false);
+		return (ft_freeall("%s%s", &tmp, &buffer), false);
 	}
 	return (true);
 }
@@ -94,7 +94,7 @@ int	do_export(char ***envp, char *str)
 	return (0);
 }
 
-int	ft_export(char	***envp, char **cmd)
+int	ft_export(t_shell *data, char	***envp, char **cmd)
 {
 	int	i;
 	int	res;
@@ -107,8 +107,8 @@ int	ft_export(char	***envp, char **cmd)
 		while (cmd[i])
 		{
 			res = do_export(envp, cmd[i]);
-			if (res == 1)
-				return (1);
+			if (res != 0)
+				data->exitstatus = res;
 			i++;
 		}
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.functions.h                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sellith <sellith@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 21:20:22 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/20 04:07:13 by sellith          ###   ########.fr       */
+/*   Updated: 2025/05/21 02:44:19 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ bool	is_envable(char c);
 void	exit_sig(t_shell *data);
 void	get_home(t_shell *data, char **envp);
 char	**get_path(t_shell *data, char **envp);
-int 	search_env_var(char **envp, char *var);
+int		search_env_var(char **envp, char *var);
 
 /*debug functions*/
 
@@ -69,8 +69,9 @@ char	*rm_from_line(t_shell *dt, char *line);
 /*build ins*/
 
 int		do_export(char ***envp, char *str);
-int		ft_export(char	***envp, char **cmd);
-int 	ft_unset(char **cmd, t_shell *data);
+int		ft_export(t_shell *data, char	***envp, char **cmd);
+int		ft_unset(char **cmd, t_shell *data);
+int		ft_exit(t_shell *data, char **cmd);
 int		ft_pwd(t_shell *data, char **cmd);
 int		ft_cd(char **cmd, t_shell *data);
 int		ft_env(char **cmd, char **env);

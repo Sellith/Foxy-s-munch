@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sellith <sellith@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 02:12:12 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/19 23:37:51 by sellith          ###   ########.fr       */
+/*   Updated: 2025/05/21 03:17:41 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,11 +57,19 @@ static int	update_path(char *newpwd, t_shell *data)
 	return (0);
 }
 
-static char	*tilde_to_usr(t_shell *data)
+static char	*tilde_to_usr(t_shell *data, char *cmd)
 {
+	int	i;
+
+	if (!cmd)
+	{
+		i = search_env_var(data->envp, "HOME=");
+		if (i == -1)
+			return (ft_printf("%e", CD_NO_HOME_ERR), NULL);
+	}
 	if (data->home)
 		return (ft_strdup(data->home));
-	ft_printf("%e", "error: $HOME not defined in Foxy's munch");
+	ft_printf("%e", CD_NO_HOME_ERR);
 	return (NULL);
 }
 
@@ -81,11 +89,11 @@ int	ft_cd(char **cmd, t_shell *data)
 		else
 		{
 			if (ft_darraylen(cmd) == 1)
-				buffer = ft_strdup("/");
+				buffer = tilde_to_usr(data, NULL);
 			else if (cmd[1][0] != '/' && cmd[1][0] != '~')
 				buffer = ft_strdjoin(data->pwd, "/", cmd[1]);
 			else if (cmd[1][0] == '~')
-				buffer = tilde_to_usr(data);
+				buffer = tilde_to_usr(data, cmd[1]);
 			else
 				buffer = ft_strdup(cmd[1]);
 			return (update_path(buffer, data));

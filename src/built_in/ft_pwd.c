@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sellith <sellith@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 08:33:35 by azhao             #+#    #+#             */
-/*   Updated: 2025/05/19 23:24:22 by sellith          ###   ########.fr       */
+/*   Updated: 2025/05/20 17:44:50 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ bool	init_pwd(t_shell *data)
 		data->pwd = get_cwd(data->pwd);
 		buffer = ft_strjoin("PWD=", data->pwd);
 		do_export(&data->envp, buffer);
+		ft_str_reset(&buffer);
 		if (!data->envp)
 			return (false);
 		data->old_pwd = NULL;

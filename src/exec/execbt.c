@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execbt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sellith <sellith@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 22:15:31 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/20 01:39:18 by sellith          ###   ########.fr       */
+/*   Updated: 2025/05/21 02:44:41 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,11 @@ static void	bt_select(t_shell *data, char **cmd, t_btins type)
 {
 	if (type == BT_ECHO)
 		data->exitstatus = ft_echo(cmd);
-	// else if (type == BT_EXIT)
-	// 	data->exitstatus = ft_exit();
+	else if (type == BT_EXIT)
+	{
+		ft_close(&data->stdin_clone);
+		data->exitstatus = ft_exit(data, cmd);
+	}
 	else if (type == BT_ENV)
 		data->exitstatus = ft_env(cmd, data->envp);
 	else if (type == BT_CD)
@@ -25,20 +28,23 @@ static void	bt_select(t_shell *data, char **cmd, t_btins type)
 	else if (type == BT_PWD)
 		data->exitstatus = ft_pwd(data, cmd);
 	else if (type == BT_EXPORT)
-		data->exitstatus = ft_export(&data->envp, cmd);
+		data->exitstatus = ft_export(data, &data->envp, cmd);
 	else if (type == BT_UNSET)
 		data->exitstatus = ft_unset(cmd, data);
 }
 
-static bool	init_bt_exec(t_shell *data, t_mlst *lst, int tmp_std[2])
+static bool	init_bt_exec(t_shell *data, t_mlst *lst, int std[2], t_btins type)
 {
 	if (!open_allfiles(lst))
 	{
 		data->exitstatus = 1;
 		return (false);
 	}
-	tmp_std[0] = dup(STDIN_FILENO);
-	tmp_std[1] = dup(STDOUT_FILENO);
+	if (type != BT_EXIT)
+	{
+		std[0] = dup(STDIN_FILENO);
+		std[1] = dup(STDOUT_FILENO);
+	}
 	return (true);
 }
 
@@ -56,14 +62,15 @@ void	execbt(t_shell *data, t_mlst *lst, t_ctn *ctn, t_btins type)
 	if (ctn->cmd_ctn == NULL)
 		return (ft_freeall("%c", &ctn->outf_fd));
 	if (data->pipes == 0)
-		init_bt_exec(data, lst, tmp_std);
-	if (ctn->outf_fd > 2)
+		init_bt_exec(data, lst, tmp_std, type);
+	if (ctn->outf_fd > 2 && data->pipes == 0)
 	{
 		dup2(ctn->outf_fd, STDOUT_FILENO);
 		close(ctn->outf_fd);
 	}
 	bt_select(data, ctn->cmd_ctn, type);
-	if (data->pipes == 0)
+	if (data->pipes == 0 && type != BT_EXIT)
 		reset_std(tmp_std);
 	ft_darray_reset(&ctn->cmd_ctn);
+	ft_close(&data->stdin_clone);
 }

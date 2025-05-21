@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: sellith <sellith@student.42.fr>            +#+  +:+       +#+         #
+#    By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/08 01:08:11 by lvan-bre          #+#    #+#              #
-#    Updated: 2025/05/20 01:37:36 by sellith          ###   ########.fr        #
+#    Updated: 2025/05/21 01:25:22 by lvan-bre         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@
 CC					:=	cc
 CFLAGS				:=	-Wextra -Wall -Werror -g
 RLFLAGS				:=	-lreadline
-VALFLAGS			:=	--leak-check=full --show-leak-kinds=all --track-fds=yes --trace-children=yes --track-origins=yes --suppressions=additional_files/readline.supp
+VALFLAGS			:=	--leak-check=full --show-leak-kinds=all --track-fds=yes --trace-children=yes --track-origins=yes --suppressions=/home/lvan-bre/Tronc_commun/Foxy_munch/additional_files/readline.supp
 
 # COMMANDS
 
@@ -80,7 +80,7 @@ SRC		=	main.c parsing/put_ctn.c parsing/parsing_utils.c parsing/parsing.c	\
 			exec/files.c exec/minishell.c exec/utils.c exec/err_msg.c 			\
 			built_in/ft_env.c built_in/ft_echo.c built_in/ft_pwd.c 				\
 			built_in/ft_export.c exec/execbt.c built_in/ft_unset.c				\
-			built_in/ft_cd.c 
+			built_in/ft_cd.c built_in/ft_exit.c
 
 
 #	OBJS CONVERSION
@@ -136,6 +136,9 @@ libft:
 	@printf "$(CLR_BLUE)\tInfo:\t\t$(CLR_CYAN)Cloning $(CLR_LPPL)\"%s\"$(CLR_CYAN) into $(CLR_LPPL)\"%s\"...$(CLR_RESET)" $(LIBFT_DIR) $(DEP)
 	@git clone -q git@github.com:Sellith/Libft_Updated.git $(LIBFT_PATH)
 	@printf "$(ERS_STR)$(CLR_BLUE)\tInfo:\t\t$(CLR_YLW)\"%s\" $(CLR_GRN) Cloned into $(CLR_YLW) \"%s\" !$(CLR_RESET)\n" $(LIBFT_DIR) $(DEP)
+	@cp $(LIBFT_H_PATH) $(INC_DIR)
+	@cp $(FT_PRINTF_H_PATH) $(INC_DIR)
+	@cp $(GNL_H_PATH) $(INC_DIR)
 
 rmlib:
 	@$(RMDIR) $(LIBFT_PATH)
@@ -149,9 +152,6 @@ udlib: fcleandep rmlib libft redep
 
 $(NAME):	$(OBJS)
 	@printf "$(ERS_STR)$(CLR_BLUE)\tSource files:\t$(CLR_GRN)Compilation succeded !$(CLR_RESET)\n"
-	@cp $(LIBFT_H_PATH) $(INC_DIR)
-	@cp $(FT_PRINTF_H_PATH) $(INC_DIR)
-	@cp $(GNL_H_PATH) $(INC_DIR)
 	@$(MAKE) -C $(LIBFT_PATH) --no-print-directory
 	@mkdir -p $(@D)
 	@$(CC) $(CFLAGS) $(OBJS) -I$(INC_DIR) $(RLFLAGS) $(ARCHIVES) -o $@

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sellith <sellith@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 22:38:23 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/20 03:32:33 by sellith          ###   ########.fr       */
+/*   Updated: 2025/05/21 02:57:55 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,14 +67,14 @@ static void	prompt_rl(t_shell *data)
 	data->line = readline(data->prompt);
 	init_signals(S_IGNORE);
 	if (!data->line)
-		return (so_long_minishell(data, 0));
+		return (so_long_minishell(data, data->exitstatus));
 	if (ft_strlen(data->line) != 0)
 		add_history(data->line);
 	if (g_sig != 0)
 		exit_sig(data);
 	if (ft_strlen(data->line) != 0 && parsing(data))
 	{
-		data->exitstatus = 0;
+		data->stdin_clone = dup(STDIN_FILENO);
 		minishell(data, data->mlst);
 		last_cmd_status(data);
 	}

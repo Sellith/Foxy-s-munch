@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sellith <sellith@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 01:14:25 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/20 04:07:48 by sellith          ###   ########.fr       */
+/*   Updated: 2025/05/21 01:10:27 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,19 @@ static int	bff_path(t_shell *data, t_ctn *ctn)
 	return (errret);
 }
 
-static void	child_proc(t_shell *data, t_ctn *ctn)
+static void	child_proc(t_shell *data, t_mlst *lst, t_ctn *ctn)
 {
-	int	errret;
+	t_btins	type;
+	int		errret;
 
-	close(data->stdin_clone);
-	// if (is_b_in(lst, ctn->cmd_ctn[0]))
-	// 	return (execbt(data, ctn->cmd_ctn));
 	init_signals(S_DEFAULT);
+	close(data->stdin_clone);
+	type = is_b_in(ctn->cmd_ctn[0]);
+	if (type != BINARY)
+	{
+		execbt(data, lst, ctn, type);
+		so_long_exec(data, data->exitstatus, NULL);
+	}
 	if (ctn->cmd_ctn[0][0] == '/' || ctn->cmd_ctn[0][0] == '.')
 	{
 		execve(ctn->cmd_ctn[0], ctn->cmd_ctn, data->envp);
@@ -68,7 +73,7 @@ void	exec_cmd(t_shell *data, t_mlst *lst, t_ctn *ctn)
 		data->exitstatus = 1;
 		return ;
 	}
-	if (!ctn->cmd_ctn)
+	if (!ctn->cmd_ctn || !ctn->cmd_ctn[0])
 		return (ft_close(&ctn->inf_fd), ft_close(&ctn->outf_fd));
 	if (pipe(fd) == -1)
 		return ;
@@ -77,7 +82,7 @@ void	exec_cmd(t_shell *data, t_mlst *lst, t_ctn *ctn)
 		return ((void)close(fd[READ]), (void)close(fd[WRITE]));
 	close_n_dup(lst, ctn, fd, tmp_pid);
 	if (tmp_pid == 0)
-		child_proc(data, ctn);
+		child_proc(data, lst, ctn);
 	talk_back(&data->pid, new_pid(tmp_pid));
 	if (lst->rdir[OUT] != NUL)
 		ft_close(&ctn->outf_fd);

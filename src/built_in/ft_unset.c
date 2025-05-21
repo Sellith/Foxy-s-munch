@@ -3,122 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sellith <sellith@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 16:51:30 by azhao             #+#    #+#             */
-/*   Updated: 2025/05/20 03:24:12 by sellith          ###   ########.fr       */
+/*   Updated: 2025/05/20 17:48:03 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.functions.h"
 
-// bool	unset_syntax(char *str)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	if (!str[0] || (str[0] != '_' && !ft_isalpha(str[0])))
-// 		return (false);
-// 	while (str[i])
-// 	{
-// 		if (!ft_isalnum(str[i]) && str[i] != '_')
-// 			return (false);
-// 		i++;
-// 	}
-// 	return (true);
-// }
-
-// int	existe(char *str, t_arg *env)
-// {
-// 	int	i;
-// 	int	len;
-
-// 	if (!env)
-// 		return (-1);
-// 	i = 0;
-// 	len = 0;
-// 	while (str[len])
-// 		len++;
-// 	if (!strncmp(env->ctn, str, len))
-// 		return (i);
-// 	env = env->next;
-// 	i++;
-// 	while (env)
-// 	{
-// 		if (!strncmp(env->ctn, str, len))
-// 			return (i);
-// 		env = env->next;
-// 		i++;
-// 	}
-// 	return (-1);
-// }
-
-// bool	unset_test(char *s, char **env)
-// {
-// 	t_arg	*p;
-// 	int		l;
-// 	t_arg	*c;
-
-// 	if (!s || !(*s))
-// 		return (false);
-// 	if (!unset_syntax(s))
-// 		return (printerror("unset: invalid identifier\n"), true);
-// 	p = NULL;
-// 	c = *env;
-// 	l = ft_strlen(s);
-// 	while (env[j])
-// 	{
-// 		if (!ft_strncmp(c->ctn, s, l) && (c->ctn[l] == '=' || c->ctn[l] == '\0'))
-// 		{
-// 			if (p)
-// 				p->next = c->next;
-// 			else
-// 				*env = c->next;
-// 			return (free(c->ctn), free(c), false);
-// 		}
-// 		p = c;
-// 		c = c->next;
-// 	}
-// 	return (false);
-// }
-
-// bool	unset_test(char *s, char **env)
-// {
-// 	int		l;
-// 	int		j;
-
-// 	if (!s || !(*s))
-// 		return (false);
-// 	if (!unset_syntax(s))
-// 		return (printerror("unset: invalid identifier\n"), true);
-// 	j = 0;
-// 	l = ft_strlen(s);
-// 	while (env[j])
-// 	{
-// 		if (!ft_strncmp(env[j], s, l)
-// 			&& (env[j][l] == '=' || env[j][l] == '\0'))
-// 			return (free(env[j]), false);
-// 		j++;
-// 	}
-// 	return (false);
-// }
-
-// int	ft_unset(char **env, char **str)
-// {
-// 	int	exit_code;
-// 	int	i;
-
-// 	exit_code = 0;
-// 	i = 0;
-// 	while (str[i])
-// 	{
-// 		if (unset_test(str[i], env))
-// 			exit_code = 1;
-// 		i++;
-// 	}
-// 	return (exit_code);
-// }
-
+/*
+	This function counts how many args will there be after unseting.
+*/
 static int	count_args(t_shell *data, char **cmd)
 {
 	int	res;
@@ -135,6 +31,11 @@ static int	count_args(t_shell *data, char **cmd)
 	return (res);
 }
 
+/*
+	This function checks if the env var set in argument matches one of the
+	args to unset.
+	It returns "true" if var and cmd[i] matches and "false" if it doesn't
+*/
 static bool	check_env(char **cmd, char *var, int args)
 {
 	int	i;
@@ -149,21 +50,29 @@ static bool	check_env(char **cmd, char *var, int args)
 	return (false);
 }
 
+/*
+	This function is the core executing of unset creating another 2D array
+	avoiding the vars defined in the cmd.
+	It also frees the envp to send it back to envp doing a sort of realloc.
+	Should there be a malloc error the function returns NULL.
+*/
 static char	**do_unset(t_shell *data, char **cmd)
 {
 	char	**buffer;
 	int		envplen;
 	int		args;
-	
+
 	args = count_args(data, cmd);
 	envplen = ft_darraylen(data->envp);
 	buffer = ft_calloc(envplen - args + 1, sizeof(char *));
 	if (!buffer)
 		return (NULL);
-	while (data->ut->i < envplen - args)
+	while (data->ut->j < envplen)
 	{
-		if (check_env(cmd, data->envp[data->ut->j], args))
+		while (check_env(cmd, data->envp[data->ut->j], args))
 			data->ut->j++;
+		if (data->ut->j == envplen)
+			break ;
 		buffer[data->ut->i] = ft_strdup(data->envp[data->ut->j++]);
 		if (!buffer[data->ut->i])
 			return (ft_freeall("%d", &buffer), NULL);
@@ -174,11 +83,17 @@ static char	**do_unset(t_shell *data, char **cmd)
 	return (buffer);
 }
 
+/*
+	This function prepares the executing of unset checking if there is any
+	unwanted option.
+	In that case and in the case of a malloc error this function returns an
+	exit code of 2 else it returns 0.
+*/
 int	ft_unset(char **cmd, t_shell *data)
 {
 	if (!cmd[1])
 		return (0);
-	if ((cmd[1][0] == '-'))
+	if (cmd[1][0] == '-')
 		return (ft_printf("%e", UNSET_OPT_ERR), 2);
 	reinit_ut(data->ut);
 	data->envp = do_unset(data, cmd + 1);

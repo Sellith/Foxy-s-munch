@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sellith <sellith@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/25 02:58:22 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/20 02:12:53 by sellith          ###   ########.fr       */
+/*   Updated: 2025/05/21 01:40:52 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,8 @@ void	freerdoc(t_shell *data, t_mlst *new)
 
 void	freerpipe(t_shell *data)
 {
-	ft_freeall("%s%s%d%d", &data->prompt, &data->line, &data->envp, 
-		&data->path);
+	ft_freeall("%s%s%d%d%s%s", &data->prompt, &data->line, &data->envp,
+		&data->path, &data->old_pwd, &data->pwd);
 	if (data->mlst)
 		freemlst(data->mlst);
 	if (data->ut)

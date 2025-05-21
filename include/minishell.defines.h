@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.defines.h                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sellith <sellith@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 22:40:43 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/17 22:13:39 by sellith          ###   ########.fr       */
+/*   Updated: 2025/05/20 18:52:16 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ typedef enum e_btins
 	BT_PWD,
 	BT_EXPORT,
 	BT_UNSET,
+	BT_NULL,
 }	t_btins;
 
 typedef enum e_in_out

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sellith <sellith@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 17:35:59 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/20 03:32:51 by sellith          ###   ########.fr       */
+/*   Updated: 2025/05/20 18:23:05 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ int	search_env_var(char **envp, char *var)
 void	get_home(t_shell *data, char **envp)
 {
 	char	*buffer;
+	int		len_til_slash;
 	int		i;
 
 	ft_str_reset(&data->home);
@@ -72,7 +73,8 @@ void	get_home(t_shell *data, char **envp)
 		buffer = getcwd(NULL, PATH_MAX);
 		if (ft_strlen(buffer) > 5)
 		{
-			data->home = ft_strndup(buffer, ft_strlen_til_char(buffer + 6, '/') + 6);
+			len_til_slash = ft_strlen_til_char(buffer + 6, '/') + 6;
+			data->home = ft_strndup(buffer, len_til_slash);
 			ft_str_reset(&buffer);
 			return ;
 		}
