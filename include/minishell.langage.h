@@ -6,7 +6,7 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 21:31:29 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/21 03:14:40 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/21 23:50:43 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ wanted : \033[0m"
 # define PERM_ERR ": Permission denied"
 # define NOTF_ERR ": Command not found"
 # define INV_ERR ": Invalid process"
-# define EXIT_ERR ": Exited with invalid exit code"
 
 /* build ins error messages */
 
@@ -53,8 +52,8 @@ wanted : \033[0m"
 # define CD_NO_HOME_ERR "Foxy's munch: cd: HOME not set"
 # define UNSET_OPT_ERR "Foxy's munch: unset takes no option\nunset: \
 usage: unset [name ...]"
-# define EXIT_NUM_ERR1 "Foxy's munch: exit: "
-# define EXIT_NUM_ERR2 ": numeric argument required"
+# define EXIT_ERR "Foxy's munch: exit: "
+# define EXIT_NUM_ERR ": numeric argument required"
 # define EXIT_ARGS_ERR "Foxy's munch: exit: too many arguments"
 
 /* colour definition */

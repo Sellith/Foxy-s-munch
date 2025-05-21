@@ -6,7 +6,7 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 05:50:17 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/21 05:28:33 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/21 22:00:54 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ char	*rm_from_line(t_shell *dt, char *line)
 */
 bool	handle_hd(t_shell *dt, t_mlst *new)
 {
-	if (select_tolkien(dt, new, DOUB, INF))
+	if (selec_tolkien(dt, new, DOUB, INF))
 	{
 		new->hd = heredoc(dt, new, new->eof);
 		if (!new->hd)
@@ -67,13 +67,13 @@ static bool	put_to_list(t_shell *dt, t_mlst *new)
 		if (dt->line[0] == '<' && dt->line[1] == '<')
 			ret = handle_hd(dt, new);
 		else if (dt->line[0] == '>' && dt->line[1] == '>')
-			ret = select_tolkien(dt, new, DOUB, OUT);
+			ret = selec_tolkien(dt, new, DOUB, OUT);
 		else if (*dt->line == '<')
-			ret = select_tolkien(dt, new, SING, INF);
+			ret = selec_tolkien(dt, new, SING, INF);
 		else if (*dt->line == '>')
-			ret = select_tolkien(dt, new, SING, OUT);
+			ret = selec_tolkien(dt, new, SING, OUT);
 		else
-			ret = select_tolkien(dt, new, NUL, CMD);
+			ret = selec_tolkien(dt, new, NUL, CMD);
 		if (ret == false)
 			return (false);
 	}

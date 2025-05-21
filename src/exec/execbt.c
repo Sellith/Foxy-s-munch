@@ -6,7 +6,7 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 22:15:31 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/21 06:19:00 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/21 18:14:01 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,14 @@
 	Sets the shell's exit status accordingly.
 	Closes stdin clone on exit command.
 */
-static void	bt_select(t_shell *data, char **cmd, t_btins type)
+static void	bt_select(t_shell *data, char **cmd, t_btins type, t_mlst *lst)
 {
 	if (type == BT_ECHO)
 		data->exitstatus = ft_echo(cmd);
 	else if (type == BT_EXIT)
 	{
-		ft_close(&data->stdin_clone);
+		if (lst->ctn->inf_fd != -2)
+			ft_close(&data->stdin_clone);
 		data->exitstatus = ft_exit(data, cmd);
 	}
 	else if (type == BT_ENV)
@@ -92,7 +93,7 @@ void	execbt(t_shell *data, t_mlst *lst, t_ctn *ctn, t_btins type)
 		dup2(ctn->outf_fd, STDOUT_FILENO);
 		close(ctn->outf_fd);
 	}
-	bt_select(data, ctn->cmd_ctn, type);
+	bt_select(data, ctn->cmd_ctn, type, lst);
 	if (data->pipes == 0 && type != BT_EXIT)
 		reset_std(tmp_std);
 	ft_darray_reset(&ctn->cmd_ctn);

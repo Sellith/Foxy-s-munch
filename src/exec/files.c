@@ -6,7 +6,7 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 01:37:45 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/21 06:12:50 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/21 18:18:55 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 	Returns false if any open or pipe call fails, else true.
 	Closes file descriptors properly to avoid leaks.
 */
-bool	open_inf(char *hd, t_rdir in_rdir, t_mlst *lst, t_ctn *ctn)
+bool	open_inf(char *hd, t_rdir rdir, t_mlst *lst, t_ctn *ctn)
 {
 	t_arg	*current;
 	int		fd[2];
@@ -34,9 +34,9 @@ bool	open_inf(char *hd, t_rdir in_rdir, t_mlst *lst, t_ctn *ctn)
 			return (perror(current->ctn), false);
 		current = current->next;
 	}
-	if (in_rdir == SING)
+	if (rdir == SING && ft_strncmp(ctn->cmd_ctn[0], "exit", 5) != 0)
 		dup2(ctn->inf_fd, STDIN_FILENO);
-	else if (in_rdir == DOUB && lst->cmd)
+	else if (rdir == DOUB && lst->cmd && ft_strncmp(ctn->cmd_ctn[0], "exit", 5))
 	{
 		if (pipe(fd) == -1)
 			return (false);

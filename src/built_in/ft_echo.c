@@ -6,7 +6,7 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 15:30:23 by azhao             #+#    #+#             */
-/*   Updated: 2025/05/21 04:12:41 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/21 18:48:38 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ bool	check_newline(char *str)
 
 	Should there be a write error the function will return 1.
  */
-int	ft_echo(char **cmd)
+unsigned long	ft_echo(char **cmd)
 {
 	bool	newline;
 	int		count;

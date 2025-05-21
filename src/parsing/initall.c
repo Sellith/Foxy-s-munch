@@ -6,7 +6,7 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 17:56:55 by sellith           #+#    #+#             */
-/*   Updated: 2025/05/21 05:46:39 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/21 23:07:08 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	last_cmd_status(t_shell *data)
 	i = 0;
 	while (data->envp[i] && ft_strncmp(data->envp[i], "?=", 2) != 0)
 		i++;
-	tmp = ft_itoa(data->exitstatus);
+	tmp = ft_ultoa(data->exitstatus);
 	buffer = ft_strjoin("?=", tmp);
 	ft_str_reset(&tmp);
 	if (!buffer)

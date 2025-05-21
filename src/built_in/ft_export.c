@@ -6,7 +6,7 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 23:25:15 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/21 04:53:12 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/21 19:04:47 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 
 /*
 	This function prints the environment in the format of the export command.
-	It skips the variable starting with "?=" since it's a local variable and
-	handles write errors.
+	It skips the local variable "?=" since it's a local variable and handles
+	write errors.
 	Returns 1 on write error, 0 otherwise.
  */
-static int	export_env(char **env)
+static unsigned long	export_env(char **env)
 {
 	int		i;
 
@@ -94,7 +94,7 @@ static bool	conditions(char *str)
 	or replaces the existing one if the name matches.
 	Returns 0 on success, 1 on error.
  */
-int	do_export(char ***envp, char *str)
+unsigned long	do_export(char ***envp, char *str)
 {
 	int		strlen;
 	int		i;
@@ -129,10 +129,10 @@ int	do_export(char ***envp, char *str)
 	Returns 0 if sucessfull and 1 if export_env fails
 	(errors are stored in data->exitstatus).
  */
-int	ft_export(t_shell *data, char	***envp, char **cmd)
+unsigned long	ft_export(t_shell *data, char	***envp, char **cmd)
 {
-	int	i;
-	int	res;
+	unsigned long	res;
+	int				i;
 
 	if (ft_darraylen(cmd) == 1)
 		return (export_env(*envp));

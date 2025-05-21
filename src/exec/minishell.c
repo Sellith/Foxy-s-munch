@@ -6,7 +6,7 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 23:27:36 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/21 06:09:25 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/22 00:02:44 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,12 @@
 /*
 	Waits for all child processes in the linked list to finish.
 	Updates exitstatus based on termination or signal status.
-	Prints "quit" if a process was terminated by a signal.
+	Prints "quit" if a process was terminated by a SIGQUIT signal and put an
+	newline in any other case (other than an SIGPIPE).
 	Frees each pid node after waiting.
 	Resets the pid pointer at the end.
 */
-static void	waitall(t_pid **pid, int	*exitstatus)
+static void	waitall(t_pid **pid, unsigned long *exitstatus)
 {
 	t_pid	*next;
 	int		status;
@@ -31,7 +32,10 @@ static void	waitall(t_pid **pid, int	*exitstatus)
 		if (WIFSIGNALED(status))
 		{
 			*exitstatus = WTERMSIG(status) + 128;
-			ft_putendl_fd("Quit", STDERR_FILENO);
+			if (*exitstatus == SIGQUIT + 128)
+				ft_dprintf(STDERR_FILENO, "%s", "Quit\n");
+			else if (*exitstatus != SIGPIPE + 128)
+				ft_dprintf(STDERR_FILENO, "\n");
 		}
 		else
 			*exitstatus = WEXITSTATUS(status);

@@ -6,7 +6,7 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 16:51:30 by azhao             #+#    #+#             */
-/*   Updated: 2025/05/21 04:54:00 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/21 19:10:56 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ static char	**do_unset(t_shell *data, char **cmd)
 	In that case and in the case of a malloc error this function returns an
 	exit code of 2 else it returns 0.
 */
-int	ft_unset(char **cmd, t_shell *data)
+unsigned long	ft_unset(char **cmd, t_shell *data)
 {
 	if (!cmd[1])
 		return (0);

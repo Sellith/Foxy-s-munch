@@ -6,7 +6,7 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 11:38:10 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/21 05:31:25 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/21 22:06:05 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ char	*get_last_ctn(t_arg *arg)
 */
 void	exit_sig(t_shell *data)
 {
-	data->exitstatus = g_sig;
+	data->exitstatus = (unsigned long)g_sig;
 	last_cmd_status(data);
 	g_sig = 0;
 }

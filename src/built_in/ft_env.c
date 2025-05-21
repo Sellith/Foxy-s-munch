@@ -6,7 +6,7 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:02:57 by azhao             #+#    #+#             */
-/*   Updated: 2025/05/21 04:16:23 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/21 18:50:10 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 	Should there be any option, argument or any write error it will exit with
 	an exit code accordingly to the error.
  */
-int	ft_env(char **cmd, char **env)
+unsigned long	ft_env(char **cmd, char **env)
 {
 	int		i;
 

@@ -6,7 +6,7 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 07:38:07 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/21 05:10:58 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/21 19:17:45 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,7 @@ static bool	split_hd(t_shell *dt, t_arg **arg, t_rdir type)
 	Returns true on success. On failure, sets exitstatus to 1, frees new, and
 	returns false.
 */
-bool	select_tolkien(t_shell *dt, t_mlst *new, t_rdir rdir, t_io i_o)
+bool	selec_tolkien(t_shell *dt, t_mlst *new, t_rdir rdir, t_io i_o)
 {
 	bool	ret;
 

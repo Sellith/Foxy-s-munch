@@ -6,7 +6,7 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 01:14:25 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/21 06:24:56 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/21 19:19:22 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,12 @@
 	If not found, tries execve with original command.
 	Returns last errno value after attempts.
 */
-static int	bff_path(t_shell *data, t_ctn *ctn)
+static unsigned long	bff_path(t_shell *data, t_ctn *ctn)
 {
-	char	*buffer;
-	int		pathlen;
-	int		errret;
-	int		i;
+	unsigned long	errret;
+	char			*buffer;
+	int				pathlen;
+	int				i;
 
 	i = 0;
 	pathlen = ft_darraylen(data->path);
@@ -56,8 +56,8 @@ static int	bff_path(t_shell *data, t_ctn *ctn)
 
 static void	child_proc(t_shell *data, t_mlst *lst, t_ctn *ctn)
 {
-	t_btins	type;
-	int		errret;
+	unsigned long	errret;
+	t_btins			type;
 
 	init_signals(S_DEFAULT);
 	close(data->stdin_clone);

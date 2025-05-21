@@ -6,11 +6,47 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 19:18:01 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/21 04:24:46 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/22 00:04:26 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.functions.h"
+
+/*
+	ft_check_ulong_str - Validates if a string can be safely cast to an
+	unsigned long.
+	Rejects non-numeric, overly long, or out-of-range values based on 64-bit
+	limits.
+	Handles optional '+' or '-' signs and compares against max unsigned
+	limits allowing an overflow.
+	Returns false on any invalid case, true otherwise.
+*/
+static bool	ft_check_ulong_str(char *str)
+{
+	int	i;
+
+	if (!str || !ft_isatoiable(str[0]))
+		return (false);
+	i = 1;
+	while (str[i])
+		if (!ft_isnum(str[i++]))
+			return (false);
+	if (!ft_isnum(str[0]) && i > 21)
+		return (false);
+	if (str[0] == '+' && i <= 21
+		&& ft_strncmp("9223372036854775807", str + 1, 20) < 0)
+		return (false);
+	if (str[0] == '-' && i <= 21
+		&& ft_strncmp("9223372036854775808", str + 1, 20) < 0)
+		return (false);
+	if (ft_isnum(str[0]) && i > 20)
+		return (false);
+	if (ft_isnum(str[0]) && i <= 20
+		&& ft_strncmp("9223372036854775807", str, 20) < 0)
+		return (false);
+
+	return (true);
+}
 
 /*
 	This function is the executing of ft_exit, checking the exit conditions:
@@ -21,31 +57,31 @@
 	exit code of one without exiting
 	if exit have one arg of more than 255 if overflows and start again at one.
  */
-int	ft_exit(t_shell *data, char **cmd)
+unsigned long	ft_exit(t_shell *data, char **cmd)
 {
-	char	*exitmsg;
-	int		exitcode;
+	char			*msg;
+	unsigned long	exitcode;
 
 	exitcode = data->exitstatus;
 	if (data->pipes == 0)
-		exitmsg = ft_strdup("exit\n");
+		msg = ft_strdup("exit\n");
 	else
-		exitmsg = ft_strdup("");
-	if (cmd[1] && !ft_isnum(cmd[1][0]))
+		msg = ft_strdup("");
+	if (cmd[1] && (!ft_check_ulong_str(cmd[1])))
 	{
-		ft_dprintf(STDERR_FILENO, "%s%s%s%s\n", exitmsg, EXIT_NUM_ERR1,
-			cmd[1], EXIT_NUM_ERR2);
-		so_long_exec(data, 2, exitmsg);
+		ft_dprintf(2, "%s%s%s%s\n", msg, EXIT_ERR, cmd[1], EXIT_NUM_ERR);
+		ft_darray_reset(&cmd);
+		so_long_exec(data, 2, msg);
 	}
 	else if (ft_darraylen(cmd) > 2)
-		return (ft_dprintf(STDERR_FILENO, "%s%s\n", exitmsg, EXIT_ARGS_ERR),
-			free(exitmsg), 1);
+		return (ft_dprintf(2, "%s%s\n", msg, EXIT_ARGS_ERR), free(msg), 1);
 	else
 	{
-		ft_dprintf(STDERR_FILENO, "%s", exitmsg);
+		ft_dprintf(STDERR_FILENO, "%s", msg);
 		if (cmd[1])
-			exitcode = ft_atoi(cmd[1]);
-		so_long_exec(data, exitcode % 256, exitmsg);
+			exitcode = ft_atoul(cmd[1]);
+		ft_darray_reset(&cmd);
+		so_long_exec(data, exitcode % 256, msg);
 	}
 	return (0);
 }

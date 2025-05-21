@@ -6,7 +6,7 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 02:12:12 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/21 04:04:19 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/21 18:48:32 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 	It also export the OLDPWD into the envp.
 	It return an exit code of 1 if the code encounters an malloc error.
  */
-static int	update_old_path(t_shell *data)
+static unsigned long	update_old_path(t_shell *data)
 {
 	char	*buffer;
 
@@ -41,7 +41,7 @@ static int	update_old_path(t_shell *data)
 	Should the directory change be impossible or a malloc error happen this
 	function will return an exit code of 1.
  */
-static int	update_path(char *newpwd, t_shell *data)
+static unsigned long	update_path(char *newpwd, t_shell *data)
 {
 	char	*buffer;
 
@@ -63,7 +63,7 @@ static int	update_path(char *newpwd, t_shell *data)
 	if (!buffer)
 		return (1);
 	do_export(&data->envp, buffer);
-	free(buffer);
+	ft_str_reset(&buffer);
 	if (!data->envp)
 		return (1);
 	return (0);
@@ -111,7 +111,7 @@ static char	*back_off(t_shell *data)
 	Should the cmd have more than 1 args it will result as an error and return
 	an exit code of 2.
  */
-int	ft_cd(char **cmd, t_shell *data)
+unsigned long	ft_cd(char **cmd, t_shell *data)
 {
 	char	*buffer;
 
@@ -130,7 +130,7 @@ int	ft_cd(char **cmd, t_shell *data)
 				buffer = tilde_to_home(data, cmd[1]);
 			else if (cmd[1][0] == '.' && cmd[1][1] == '.')
 				buffer = back_off(data);
-			else if (cmd[1][0] != '/' && cmd[1][0] != '~')
+			else if (cmd[1][0] != '/')
 				buffer = ft_strdjoin(data->pwd, "/", cmd[1]);
 			else
 				buffer = ft_strdup(cmd[1]);

@@ -6,7 +6,7 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 08:33:35 by azhao             #+#    #+#             */
-/*   Updated: 2025/05/21 04:42:33 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/21 19:10:31 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,7 @@ static void	init_old_cwd(t_shell *data, char **envp)
 	i = search_env_var(data->envp, "OLDPWD=");
 	if (i != -1)
 	{
-		if (data->old_pwd)
-			free(data->old_pwd);
+		ft_str_reset(&data->old_pwd);
 		data->old_pwd = ft_strdup((envp[i]) + 7);
 	}
 }
@@ -93,7 +92,6 @@ bool	init_pwd(t_shell *data)
 		ft_str_reset(&buffer);
 		if (!data->envp)
 			return (false);
-		data->old_pwd = NULL;
 	}
 	return (true);
 }
@@ -103,7 +101,7 @@ bool	init_pwd(t_shell *data)
 	The function returns an exit code of 1 if there is a write error
 	and 2 if it has an option.
  */
-int	ft_pwd(t_shell *data, char **cmd)
+unsigned long	ft_pwd(t_shell *data, char **cmd)
 {
 	if (cmd[1] && cmd[1][0] == '-')
 		return (ft_printf("%e", PWD_OPT_ERR), 2);

@@ -6,7 +6,7 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 22:40:43 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/21 06:26:27 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/21 18:32:53 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,20 +113,20 @@ typedef struct s_pid
 
 typedef struct s_shell
 {
-	char	**envp;
-	char	**path;
-	char	*line;
-	int		lsize;
-	int		pipes;
-	int		exitstatus;
-	int		stdin_clone;
-	char	*home;
-	char	*prompt;
-	char	*pwd;
-	char	*old_pwd;
-	t_pid	*pid;
-	t_mlst	*mlst;
-	t_utils	*ut;
-}			t_shell;
+	unsigned long	exitstatus;
+	char			**envp;
+	char			**path;
+	char			*line;
+	int				lsize;
+	int				pipes;
+	int				stdin_clone;
+	char			*home;
+	char			*prompt;
+	char			*pwd;
+	char			*old_pwd;
+	t_pid			*pid;
+	t_mlst			*mlst;
+	t_utils			*ut;
+}					t_shell;
 
 #endif

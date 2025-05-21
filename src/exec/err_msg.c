@@ -6,7 +6,7 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 23:17:37 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/21 06:25:19 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/21 22:01:32 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 	Prints custom message or perror output.
 	Frees command array and exits with status.
 */
-void	errhdlg(t_shell *data, t_ctn *ctn, int err)
+void	errhdlg(t_shell *data, t_ctn *ctn, unsigned long err)
 {
 	char	*msg;
 
