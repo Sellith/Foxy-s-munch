@@ -6,12 +6,17 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 02:12:12 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/21 03:17:41 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/21 04:04:19 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.functions.h"
 
+/*
+	This function updates the old path replacing it with the former data->pwd.
+	It also export the OLDPWD into the envp.
+	It return an exit code of 1 if the code encounters an malloc error.
+ */
 static int	update_old_path(t_shell *data)
 {
 	char	*buffer;
@@ -25,10 +30,17 @@ static int	update_old_path(t_shell *data)
 	do_export(&data->envp, buffer);
 	if (!data->envp)
 		return (1);
-	free(buffer);
+	ft_str_reset(&buffer);
 	return (0);
 }
 
+/*
+	This function updates the path changing the path with chdir puting the new
+	path update data->pwd with the new path and puting it in the envp.
+
+	Should the directory change be impossible or a malloc error happen this
+	function will return an exit code of 1.
+ */
 static int	update_path(char *newpwd, t_shell *data)
 {
 	char	*buffer;
@@ -57,7 +69,13 @@ static int	update_path(char *newpwd, t_shell *data)
 	return (0);
 }
 
-static char	*tilde_to_usr(t_shell *data, char *cmd)
+/*
+	This function expends empty arg or tilde args to home.
+	If arg is empty it only looks in the HOME var and returns an error if not
+	found.
+	If arg is tilde it will look at data->home and return NULL if not found.
+ */
+static char	*tilde_to_home(t_shell *data, char *cmd)
 {
 	int	i;
 
@@ -73,6 +91,26 @@ static char	*tilde_to_usr(t_shell *data, char *cmd)
 	return (NULL);
 }
 
+/*
+	This function dups the pwd until the last '/' to get to the parent
+	directory.
+ */
+static char	*back_off(t_shell *data)
+{
+	char	*buffer;
+
+	buffer = ft_strndup(data->pwd, ft_revstrlen_til_char(data->pwd, '/'));
+	return (buffer);
+}
+
+/*
+	This function prepares the executing of ft_cd puting checking for cd's args
+	and puting it in buffer in function of if the str needs to be modified to
+	be sent to cd's executing function -> "update path".
+
+	Should the cmd have more than 1 args it will result as an error and return
+	an exit code of 2.
+ */
 int	ft_cd(char **cmd, t_shell *data)
 {
 	char	*buffer;
@@ -88,12 +126,12 @@ int	ft_cd(char **cmd, t_shell *data)
 		}
 		else
 		{
-			if (ft_darraylen(cmd) == 1)
-				buffer = tilde_to_usr(data, NULL);
+			if (ft_darraylen(cmd) == 1 || cmd[1][0] == '~')
+				buffer = tilde_to_home(data, cmd[1]);
+			else if (cmd[1][0] == '.' && cmd[1][1] == '.')
+				buffer = back_off(data);
 			else if (cmd[1][0] != '/' && cmd[1][0] != '~')
 				buffer = ft_strdjoin(data->pwd, "/", cmd[1]);
-			else if (cmd[1][0] == '~')
-				buffer = tilde_to_usr(data, cmd[1]);
 			else
 				buffer = ft_strdup(cmd[1]);
 			return (update_path(buffer, data));

@@ -6,18 +6,24 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 23:25:15 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/21 02:51:05 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/21 04:53:12 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.functions.h"
 
+/*
+	This function prints the environment in the format of the export command.
+	It skips the variable starting with "?=" since it's a local variable and
+	handles write errors.
+	Returns 1 on write error, 0 otherwise.
+ */
 static int	export_env(char **env)
 {
 	int		i;
 
 	i = 0;
-	if (!env && (*env)[0])
+	if (!env || !(*env)[0])
 		return (0);
 	while (env[i])
 	{
@@ -36,6 +42,12 @@ static int	export_env(char **env)
 	return (0);
 }
 
+/*
+	This function checks if the given string is a valid variable name for export.
+	It must start with a letter or underscore, and contain only alphanumerics
+	or underscores before '='.
+	Returns true if the name is valid, false otherwise.
+ */
 static bool	right_args(char *str)
 {
 	int	i;
@@ -54,6 +66,11 @@ static bool	right_args(char *str)
 	return (true);
 }
 
+/*
+	This function checks if the export argument is a valid identifier.
+	If not, it prints an error message with the invalid name.
+	Returns true if the identifier is valid, false otherwise.
+ */
 static bool	conditions(char *str)
 {
 	char	*tmp;
@@ -63,12 +80,20 @@ static bool	conditions(char *str)
 	{
 		tmp = ft_strndup(str, ft_strlen_til_char(str, '='));
 		buffer = ft_strjoin(IDENTIFIER_ERR, tmp);
+		if (!buffer)
+			return (ft_str_reset(&tmp), false);
 		ft_printf("%e", buffer);
 		return (ft_freeall("%s%s", &tmp, &buffer), false);
 	}
 	return (true);
 }
 
+/*
+	This function adds or updates an environment variable in envp.
+	It first validates the variable format, then adds it if new,
+	or replaces the existing one if the name matches.
+	Returns 0 on success, 1 on error.
+ */
 int	do_export(char ***envp, char *str)
 {
 	int		strlen;
@@ -90,10 +115,20 @@ int	do_export(char ***envp, char *str)
 	{
 		free((*envp)[i]);
 		(*envp)[i] = ft_strdup(str);
+		if (!(*envp)[i])
+			return (ft_darray_reset(envp), 1);
 	}
 	return (0);
 }
 
+/*
+	This function is the executing of the export built-in command.
+	If no arguments are given, it prints the environment in export format.
+	Otherwise, it exports each variable and updates the shell's exit status
+	on error.
+	Returns 0 if sucessfull and 1 if export_env fails
+	(errors are stored in data->exitstatus).
+ */
 int	ft_export(t_shell *data, char	***envp, char **cmd)
 {
 	int	i;
@@ -114,16 +149,3 @@ int	ft_export(t_shell *data, char	***envp, char **cmd)
 	}
 	return (0);
 }
-
-// int	main(int argc, char **argv, char **envp)
-// {
-// 	char	**my_array;
-
-// 	(void)argc;
-// 	my_array = ft_arraydup(envp);
-// 	if (ft_export(&my_array, argv) == 1)
-// 		return (1);
-// 	ft_printf("%D", my_array);
-// 	ft_freedarray(my_array);
-// 	return (0);
-// }

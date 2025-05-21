@@ -6,12 +6,20 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 01:37:45 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/15 21:24:33 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/21 06:12:50 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.functions.h"
 
+/*
+	Opens input files for redirection, setting the input file descriptor.
+	For single input redirection, opens files for reading and duplicates fd to
+	STDIN.
+	For double input (heredoc), creates a pipe and writes heredoc content to it.
+	Returns false if any open or pipe call fails, else true.
+	Closes file descriptors properly to avoid leaks.
+*/
 bool	open_inf(char *hd, t_rdir in_rdir, t_mlst *lst, t_ctn *ctn)
 {
 	t_arg	*current;
@@ -41,6 +49,13 @@ bool	open_inf(char *hd, t_rdir in_rdir, t_mlst *lst, t_ctn *ctn)
 	return (true);
 }
 
+/*
+	Opens output files for redirection with proper mode (append or truncate).
+	Iterates over the list of output files, opening each one in write mode.
+	Closes previous output file descriptor before opening a new one.
+	Returns false and prints error if any open call fails.
+	Closes the last output fd if redirection type differs from last redirection.
+*/
 static bool	open_outf(t_rdir last_rdir, t_rdir type, t_arg *outf, t_ctn *ctn)
 {
 	t_arg	*current;
@@ -63,6 +78,14 @@ static bool	open_outf(t_rdir last_rdir, t_rdir type, t_arg *outf, t_ctn *ctn)
 	return (true);
 }
 
+/*
+	Opens all input/output files for the given command list node.
+	Handles input redirection if specified.
+	Opens output files in correct order based on single or double redirection.
+		if mode is append open all truncate files then the append files
+		if mode is append open all append files then the truncate files
+	Returns false if any file opening fails, true otherwise.
+*/
 bool	open_allfiles(t_mlst *lst)
 {
 	if (lst->rdir[INF] != NUL)

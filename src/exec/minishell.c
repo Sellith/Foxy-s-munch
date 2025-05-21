@@ -6,12 +6,19 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 23:27:36 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/20 18:56:24 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/21 06:09:25 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.functions.h"
 
+/*
+	Waits for all child processes in the linked list to finish.
+	Updates exitstatus based on termination or signal status.
+	Prints "quit" if a process was terminated by a signal.
+	Frees each pid node after waiting.
+	Resets the pid pointer at the end.
+*/
 static void	waitall(t_pid **pid, int	*exitstatus)
 {
 	t_pid	*next;
@@ -24,7 +31,7 @@ static void	waitall(t_pid **pid, int	*exitstatus)
 		if (WIFSIGNALED(status))
 		{
 			*exitstatus = WTERMSIG(status) + 128;
-			ft_putendl_fd("quit", STDERR_FILENO);
+			ft_putendl_fd("Quit", STDERR_FILENO);
 		}
 		else
 			*exitstatus = WEXITSTATUS(status);
@@ -34,6 +41,11 @@ static void	waitall(t_pid **pid, int	*exitstatus)
 	pid = NULL;
 }
 
+/*
+	Counts the number of elements in the linked list of arguments.
+	Iterates through each node until the end is reached.
+	Returns the total count as an integer.
+*/
 static int	ft_lstlen(t_arg *lst)
 {
 	t_arg	*current;
@@ -49,6 +61,12 @@ static int	ft_lstlen(t_arg *lst)
 	return (i);
 }
 
+/*
+	Iterates through the linked list to copy argument strings into an array.
+	Skips empty strings and stops if none are found initially.
+	Duplicates each valid string; on failure, frees the entire array.
+	Sets the last element of the array to NULL to mark its end.
+*/
 static void	cmd_dupcheck(t_arg *current, char ***cmd)
 {
 	int	i;
@@ -76,6 +94,12 @@ static void	cmd_dupcheck(t_arg *current, char ***cmd)
 	(*cmd)[i] = NULL;
 }
 
+/*
+	Converts a linked list of arguments into a NULL-terminated array of strings.
+	Allocates memory for the array based on the list length.
+	Calls a helper to duplicate each argument string into the array.
+	Returns the array or NULL on allocation failure.
+*/
 char	**ft_ltoda(t_arg *cmd)
 {
 	char	**buffer;
@@ -89,6 +113,12 @@ char	**ft_ltoda(t_arg *cmd)
 	return (buffer);
 }
 
+/*
+	Main loop of the minishell execution.
+	Handles built-in commands without pipes directly.
+	Otherwise, executes commands in the list sequentially.
+	Resets duplicated input and waits for all child processes.
+*/
 void	minishell(t_shell *data, t_mlst *lst)
 {
 	t_btins	bt;

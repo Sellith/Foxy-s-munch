@@ -6,12 +6,18 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 22:15:31 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/21 02:44:41 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/21 06:19:00 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.functions.h"
 
+/*
+	Executes the built-in command based on its type.
+	Calls the corresponding function for each built-in.
+	Sets the shell's exit status accordingly.
+	Closes stdin clone on exit command.
+*/
 static void	bt_select(t_shell *data, char **cmd, t_btins type)
 {
 	if (type == BT_ECHO)
@@ -33,6 +39,12 @@ static void	bt_select(t_shell *data, char **cmd, t_btins type)
 		data->exitstatus = ft_unset(cmd, data);
 }
 
+/*
+	Initializes execution environment for built-ins.
+	Opens all necessary input/output files.
+	Saves current stdin and stdout if it's not an exit command.
+	Returns false if file opening fails, true otherwise.
+*/
 static bool	init_bt_exec(t_shell *data, t_mlst *lst, int std[2], t_btins type)
 {
 	if (!open_allfiles(lst))
@@ -48,6 +60,11 @@ static bool	init_bt_exec(t_shell *data, t_mlst *lst, int std[2], t_btins type)
 	return (true);
 }
 
+/*
+	Restores original stdin and stdout file descriptors.
+	Uses saved descriptors in tmp_std array.
+	Closes the saved descriptors after restoring.
+*/
 static void	reset_std(int tmp_std[2])
 {
 	dup2(tmp_std[0], STDIN_FILENO);
@@ -55,6 +72,13 @@ static void	reset_std(int tmp_std[2])
 	ft_freeall("%c%c", &tmp_std[0], &tmp_std[1]);
 }
 
+/*
+	Executes a built-in command without pipes.
+	Initializes standard fds backup and handles output redirection if needed.
+	Calls the proper built-in command handler based on type.
+	Restores standard fds after execution if not exiting.
+	Frees command content and closes cloned stdin fd.
+*/
 void	execbt(t_shell *data, t_mlst *lst, t_ctn *ctn, t_btins type)
 {
 	int	tmp_std[2];

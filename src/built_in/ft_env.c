@@ -3,15 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sellith <sellith@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:02:57 by azhao             #+#    #+#             */
-/*   Updated: 2025/05/19 18:35:16 by sellith          ###   ########.fr       */
+/*   Updated: 2025/05/21 04:16:23 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.functions.h"
 
+/*
+	This function is the executing of ft_env it skips the $? since it is a local
+	variable.
+	Should there be any option, argument or any write error it will exit with
+	an exit code accordingly to the error.
+ */
 int	ft_env(char **cmd, char **env)
 {
 	int		i;

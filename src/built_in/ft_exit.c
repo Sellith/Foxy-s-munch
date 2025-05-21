@@ -6,12 +6,21 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 19:18:01 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/21 02:57:08 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/21 04:24:46 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.functions.h"
 
+/*
+	This function is the executing of ft_exit, checking the exit conditions:
+	if exit have no args it exits with the exit code of the former cmd
+	if exit have an first arg that's not numeric it exits with an exit code of 2
+	no matter how many args there are
+	if exit have more than one arg with a first numeric arg it returns with an
+	exit code of one without exiting
+	if exit have one arg of more than 255 if overflows and start again at one.
+ */
 int	ft_exit(t_shell *data, char **cmd)
 {
 	char	*exitmsg;

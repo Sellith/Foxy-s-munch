@@ -6,7 +6,7 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 21:20:22 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/21 02:44:19 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/21 06:27:09 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@
 # include "libft.h"
 # include "minishell.defines.h"
 # include "minishell.langage.h"
-
 
 /*initiation*/
 

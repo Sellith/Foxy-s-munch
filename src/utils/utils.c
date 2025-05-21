@@ -6,12 +6,17 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 17:35:59 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/20 18:23:05 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/21 05:05:20 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.functions.h"
 
+/*
+	Extracts the PATH variable from envp and splits it into an array.
+	If PATH is not found, returns an array with an empty string.
+	Also frees the previous data->path before updating.
+ */
 char	**get_path(t_shell *data, char **envp)
 {
 	char	**path;
@@ -27,6 +32,10 @@ char	**get_path(t_shell *data, char **envp)
 	return (path);
 }
 
+/*
+	Closes the file descriptor if it is valid (> 2)
+	and sets it to -2 to mark it as closed.
+*/
 void	ft_close(int *fd)
 {
 	if (*fd > 2)
@@ -36,6 +45,11 @@ void	ft_close(int *fd)
 	}
 }
 
+/*
+	Closes one end of the pipe depending on the process.
+	Child process (pid == 0) closes read end,
+	parent process closes write end.
+*/
 void	closefds(int fd[2], int pid)
 {
 	if (pid == 0)
@@ -44,6 +58,10 @@ void	closefds(int fd[2], int pid)
 		close(fd[WRITE]);
 }
 
+/*
+	Searches for an environment variable 'var' in envp.
+	Returns the index if found, or -1 if not found or var is empty.
+*/
 int	search_env_var(char **envp, char *var)
 {
 	int	len;
@@ -60,6 +78,12 @@ int	search_env_var(char **envp, char *var)
 	return (i);
 }
 
+/*
+	Retrieves the HOME directory from envp and sets data->home.
+	If HOME is not found, tries to fallback to the home of the
+	current working directory if possible.
+	Resets previous home string before setting a new one.
+*/
 void	get_home(t_shell *data, char **envp)
 {
 	char	*buffer;

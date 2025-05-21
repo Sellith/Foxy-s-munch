@@ -6,12 +6,19 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 22:38:23 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/21 02:57:55 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/21 05:01:37 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.functions.h"
 
+/*
+	Replaces the home directory path in pwd with '~' if applicable.
+	If pwd starts with data->home, it returns a new string replacing that
+	prefix by '~'.
+	Otherwise, returns a copy of pwd or shortened path starting with '~'.
+	Returns allocated string or NULL on failure.
+ */
 static char	*usr_to_tilde(t_shell *data, char *pwd)
 {
 	char	*buffer;
@@ -40,6 +47,11 @@ static char	*usr_to_tilde(t_shell *data, char *pwd)
 	return (buffer);
 }
 
+/*
+	Creates and returns the shell prompt string with colors and username.
+	It formats the prompt as "⊢[Foxy's Munch]-[repertory] > ".
+	Returns the allocated prompt string or NULL on failure.
+ */
 static char	*make_prompt(t_shell *data)
 {
 	char	*buffer;
@@ -58,6 +70,12 @@ static char	*make_prompt(t_shell *data)
 	return (buffer);
 }
 
+/*
+	This function handles the interactive shell prompt using readline.
+	It initializes signals, reads user input, adds non-empty lines to history,
+	and executes commands if parsing succeeds.
+	Exits or resets state appropriately based on input and signals.
+ */
 static void	prompt_rl(t_shell *data)
 {
 	data->prompt = make_prompt(data);
@@ -81,6 +99,11 @@ static void	prompt_rl(t_shell *data)
 	reset_data(data, &data->mlst);
 }
 
+/*
+	This function increments the SHLVL environment variable by 1.
+	If SHLVL is not set, it initializes it to 1.
+	It updates or adds the SHLVL variable in the shell environment.
+ */
 static void	shell_lvl(t_shell *data)
 {
 	char	*buffer;
@@ -110,6 +133,12 @@ static void	shell_lvl(t_shell *data)
 	(free(buffer), free(tmp));
 }
 
+/*
+	Main function initializing shell data and environment,
+	checking arguments, and entering the main prompt loop.
+	Handles environment duplication, PWD and SHLVL setup,
+	and cleans up on errors or exit.
+ */
 int	main(int argc, char **argv, char **envp)
 {
 	t_shell	data;

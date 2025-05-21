@@ -1,0 +1,6 @@
+--leak-check=full
+--show-leak-kinds=all
+--track-fds=yes
+--trace-children=yes
+--track-origins=yes
+--suppressions=/home/lvan-bre/Tronc_commun/Foxy_munch/additional_files/readline.supp

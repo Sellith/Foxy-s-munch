@@ -3,15 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   err_msg.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sellith <sellith@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 23:17:37 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/20 04:09:40 by sellith          ###   ########.fr       */
+/*   Updated: 2025/05/21 06:25:19 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.functions.h"
 
+/*
+	Handles error codes after exec attempts.
+	Sets shell exit status based on error type (e.g., 127 for not found).
+	Prints custom message or perror output.
+	Frees command array and exits with status.
+*/
 void	errhdlg(t_shell *data, t_ctn *ctn, int err)
 {
 	char	*msg;

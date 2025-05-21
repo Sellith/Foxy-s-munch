@@ -6,12 +6,18 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 07:38:07 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/15 21:24:33 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/21 05:10:58 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.functions.h"
 
+/*
+	Scans 'line' to find the first token outside quotes.
+	Counts single and double quotes to handle quoting context.
+	Returns index of token or -1 on error (empty input or unmatched quotes).
+	Updates dt->lsize with scanned length.
+*/
 static int	quote_check(char *line, int pre_len, t_arg *arg, t_shell *dt)
 {
 	int	i;
@@ -40,6 +46,11 @@ static int	quote_check(char *line, int pre_len, t_arg *arg, t_shell *dt)
 	return (i);
 }
 
+/*
+	Removes part of dt->line from the new list, then appends 'new' argument node
+	to the end of the linked list pointed to by *cmd.
+	Initializes *cmd if it was NULL.
+*/
 static void	arg_bark(t_arg **cmd, t_arg *new, t_shell *dt)
 {
 	t_arg	*head;
@@ -56,6 +67,13 @@ static void	arg_bark(t_arg **cmd, t_arg *new, t_shell *dt)
 	head->next = new;
 }
 
+/*
+	Allocates and initializes a new argument node from dt->line
+	starting at dt->ut->i.
+	Extracts the argument content considering quotes, and appends
+	the node to *arg.
+	Returns true on success, false if allocation or parsing fails.
+*/
 static bool	split_args(t_shell *dt, t_arg **arg, t_rdir type)
 {
 	t_arg	*new;
@@ -85,6 +103,13 @@ static bool	split_args(t_shell *dt, t_arg **arg, t_rdir type)
 	return (true);
 }
 
+/*
+	Allocates and initializes a new here-document argument node from
+	dt->line starting at dt->ut->i.
+	Extracts the here-doc content considering quotes, and appends the
+	node to *arg.
+	Returns true on success, false if allocation or parsing fails.
+*/
 static bool	split_hd(t_shell *dt, t_arg **arg, t_rdir type)
 {
 	t_arg	*new;
@@ -114,6 +139,19 @@ static bool	split_hd(t_shell *dt, t_arg **arg, t_rdir type)
 	return (true);
 }
 
+/*
+	Selects and calls the appropriate split function based on the IO type and
+	redirection type:
+	- CMD: command arguments
+	- INF: input redirection (SING = <, DOUB = <<)
+	- OUT: output redirection (SING = >, DOUB = >>)
+
+	Updates the corresponding field in the new mlst structure with the parsed
+	argument.
+
+	Returns true on success. On failure, sets exitstatus to 1, frees new, and
+	returns false.
+*/
 bool	select_tolkien(t_shell *dt, t_mlst *new, t_rdir rdir, t_io i_o)
 {
 	bool	ret;

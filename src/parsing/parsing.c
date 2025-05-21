@@ -6,12 +6,17 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 05:50:17 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/15 21:24:33 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/21 05:28:33 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.functions.h"
 
+/*
+	Removes the first dt->lsize characters from line.
+	Returns a new allocated string with the remaining content.
+	Frees the old line to avoid memory leaks.
+*/
 char	*rm_from_line(t_shell *dt, char *line)
 {
 	char	*buffer;
@@ -22,6 +27,13 @@ char	*rm_from_line(t_shell *dt, char *line)
 	return (buffer);
 }
 
+/*
+	Handles the heredoc setup for the command:
+	Calls select_tolkien to parse heredoc delimiters.
+	If successful, calls heredoc to process the heredoc content.
+	Frees the command structure and returns false on failure.
+	Returns true on success, false otherwise.
+*/
 bool	handle_hd(t_shell *dt, t_mlst *new)
 {
 	if (select_tolkien(dt, new, DOUB, INF))
@@ -34,6 +46,14 @@ bool	handle_hd(t_shell *dt, t_mlst *new)
 	return (false);
 }
 
+/*
+	Parses the input line and populates the command list new:
+	- Removes spaces and tabs at the start of dt->line.
+	- Processes redirections (heredoc <<, append >>, input <, output >).
+	- Adds commands or arguments otherwise.
+	- Stops parsing on pipe |, newline \n, or end of line.
+	Returns true if all parsing succeeds, false on any error.
+*/
 static bool	put_to_list(t_shell *dt, t_mlst *new)
 {
 	bool	ret;
@@ -60,6 +80,12 @@ static bool	put_to_list(t_shell *dt, t_mlst *new)
 	return (true);
 }
 
+/*
+	Adds a new node new at the end of the doubly linked list mlst.
+	If the list is empty, initializes it with new.
+	Otherwise, traverses to the last node and appends new, updating
+	prev and next pointers accordingly.
+*/
 static void	add_bach(t_mlst **mlst, t_mlst *new)
 {
 	t_mlst	*head;
@@ -77,6 +103,16 @@ static void	add_bach(t_mlst **mlst, t_mlst *new)
 	new->prev = head;
 }
 
+/*
+	Parses the input line dt->line into a linked list of command structures.
+	- Allocates a new list node for each command segment.
+	- Removes spaces and tabs from the current line start.
+	- Checks for syntax errors such as unexpected pipe at start.
+	- Initializes and fills the list node with command and redirection info.
+	- Adds the node to the master list.
+	- Advances past pipe symbols to parse next command segment.
+	Returns true on success, false on any allocation or parsing error.
+*/
 bool	parsing(t_shell *dt)
 {
 	t_mlst	*new;
@@ -95,7 +131,6 @@ bool	parsing(t_shell *dt)
 		}
 		if (!initmlst(&new) || !put_to_list(dt, new))
 			return (false);
-		new->next = NULL;
 		add_bach(&dt->mlst, new);
 		if (*(dt->line) == '|')
 			if (!next_pipe(dt))

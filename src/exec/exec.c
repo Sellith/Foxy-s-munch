@@ -6,12 +6,19 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 01:14:25 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/21 01:10:27 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/21 06:24:56 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.functions.h"
 
+/*
+	Tries to execute command by searching in all PATH directories.
+	Builds full path and calls execve for each until success or error
+	other than ENOENT.
+	If not found, tries execve with original command.
+	Returns last errno value after attempts.
+*/
 static int	bff_path(t_shell *data, t_ctn *ctn)
 {
 	char	*buffer;
@@ -27,17 +34,25 @@ static int	bff_path(t_shell *data, t_ctn *ctn)
 		execve(buffer, ctn->cmd_ctn, data->envp);
 		errret = errno;
 		free(buffer);
-		if (errret != 2)
+		if (errret != ENOENT)
 			break ;
 		i++;
 	}
-	if (errret == 2)
+	if (errret == ENOENT)
 	{
 		execve(ctn->cmd_ctn[0], ctn->cmd_ctn, data->envp);
 		errret = errno;
 	}
 	return (errret);
 }
+
+/*
+	Handles execution inside the child process after fork.
+	Sets default signal handling and closes stdin clone.
+	Executes builtin commands if detected.
+	If command is a path, tries execve and handles errors.
+	Otherwise, searches executable in PATH and handles errors.
+*/
 
 static void	child_proc(t_shell *data, t_mlst *lst, t_ctn *ctn)
 {
@@ -61,6 +76,12 @@ static void	child_proc(t_shell *data, t_mlst *lst, t_ctn *ctn)
 	errhdlg(data, ctn, errret);
 }
 
+/*
+	Executes a command in a child process with proper redirections.
+	Handles opening files, creating pipes, and forking.
+	In child, runs command with redirections set.
+	closes unused fds dups to wanted fds and tracks child pids.
+*/
 void	exec_cmd(t_shell *data, t_mlst *lst, t_ctn *ctn)
 {
 	int		fd[2];

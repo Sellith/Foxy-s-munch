@@ -3,15 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   next_pipe.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sellith <sellith@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 03:52:34 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/19 18:37:52 by sellith          ###   ########.fr       */
+/*   Updated: 2025/05/21 05:37:27 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.functions.h"
 
+/*
+	Child process for reading a continuation line after a trailing pipe.
+	It installs heredoc-specific signal handlers, reads a line from stdin,
+	skips empty lines, handles SIGINT (g_sig == 130) by closing the pipe and
+	exiting, then writes the line to the pipe and closes the write end before
+	exiting with status 0.
+*/
 static int	child_rl(t_shell *data, int w_fd)
 {
 	char	*buffer;
@@ -32,6 +39,13 @@ static int	child_rl(t_shell *data, int w_fd)
 	return (0);
 }
 
+/*
+	Handles reading additional input for a trailing pipe in the command line.
+	Creates a pipe and forks a child process to read the continuation line.
+	The parent waits for the child and appends the new input to data->line.
+	Returns true on success, false on error or if the child exits with
+	non-zero status.
+*/
 static bool	pipe_rl(t_shell *data)
 {
 	char	*buffer;
@@ -61,9 +75,19 @@ static bool	pipe_rl(t_shell *data)
 	return (true);
 }
 
+/*
+	Moves the parsing position past the current pipe character.
+	Checks for syntax errors if another pipe follows immediately.
+	Increments the pipe count.
+	Removes leading spaces and tabs after the pipe.
+	If the line ends or has a newline, triggers pipe read-line handling.
+	Returns true if parsing can continue, false on error.
+*/
 bool	next_pipe(t_shell *dt)
 {
 	ft_str_replace(&dt->line, dt->line + 1);
+	if (!dt->line)
+		return (false);
 	if (*dt->line == '|')
 	{
 		dt->exitstatus = 1;
@@ -71,7 +95,11 @@ bool	next_pipe(t_shell *dt)
 	}
 	dt->pipes++;
 	dt->line = ft_rmchars(dt->line, ' ');
+	if (!dt->line)
+		return (false);
 	dt->line = ft_rmchars(dt->line, '\t');
+	if (!dt->line)
+		return (false);
 	if (*dt->line == '\n' || !*dt->line)
 	{
 		if (!pipe_rl(dt))

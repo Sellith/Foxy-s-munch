@@ -6,12 +6,16 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 15:30:23 by azhao             #+#    #+#             */
-/*   Updated: 2025/05/21 02:52:21 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/21 04:12:41 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.functions.h"
 
+/*
+	This function check if the '-n' option is triggered to check if there will
+	be a newline.
+ */
 bool	check_newline(char *str)
 {
 	unsigned int	i;
@@ -30,8 +34,20 @@ bool	check_newline(char *str)
 	return (true);
 }
 
-static int	write_echo(char **cmd, bool newline, int i, int count)
+/*
+	This function is the executing of echo, writing echo and checking for
+	errors, and puting a newline if the newline function returns true.
+
+	Should there be a write error the function will return 1.
+ */
+int	ft_echo(char **cmd)
 {
+	bool	newline;
+	int		count;
+	int		i;
+
+	i = 1;
+	count = ft_darraylen(cmd);
 	newline = check_newline(cmd[i]);
 	if (!newline)
 		i++;
@@ -47,11 +63,5 @@ static int	write_echo(char **cmd, bool newline, int i, int count)
 	if (newline == true)
 		if (write(1, "\n", 1) == -1)
 			return (perror(ECHO_WRITE_ERR), 1);
-	return (0);
-}
-
-int	ft_echo(char **cmd)
-{
-	write_echo(cmd, true, 1, ft_darraylen(cmd));
 	return (0);
 }

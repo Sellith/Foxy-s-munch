@@ -6,12 +6,12 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 22:40:43 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/20 18:52:16 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/21 06:26:27 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#ifndef MINISHELL_DEFINES_H
+# define MINISHELL_DEFINES_H
 
 typedef struct s_pid	t_pid;
 typedef struct s_mlst	t_mlst;
