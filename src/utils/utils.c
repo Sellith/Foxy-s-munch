@@ -6,7 +6,7 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 17:35:59 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/22 04:31:59 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/22 18:52:07 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,6 @@ int	search_env_var(char **envp, char *var)
 void	get_home(t_shell *data, char **envp)
 {
 	char	*buffer;
-	char	*user;
 	int		len_til_slash;
 	int		i;
 
@@ -103,9 +102,7 @@ void	get_home(t_shell *data, char **envp)
 			ft_str_reset(&buffer);
 			return ;
 		}
-		user = get_user();
-		data->home = ft_strdjoin("/home/", user, "/");
-		ft_str_reset(&user);
+		data->home = ft_strdjoin("/home/", data->usr, "/");
 		return ;
 	}
 	data->home = ft_strdup((envp)[i] + 5);

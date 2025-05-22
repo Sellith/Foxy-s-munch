@@ -6,7 +6,7 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 05:50:17 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/21 22:00:54 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/22 19:35:00 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ char	*rm_from_line(t_shell *dt, char *line)
 	Handles the heredoc setup for the command:
 	Calls select_tolkien to parse heredoc delimiters.
 	If successful, calls heredoc to process the heredoc content.
-	Frees the command structure and returns false on failure.
+	Frees the command structure and returns false on failure or if a SIGINT is
+	detected.
 	Returns true on success, false otherwise.
 */
 bool	handle_hd(t_shell *dt, t_mlst *new)
@@ -39,7 +40,7 @@ bool	handle_hd(t_shell *dt, t_mlst *new)
 	if (selec_tolkien(dt, new, DOUB, INF))
 	{
 		new->hd = heredoc(dt, new, new->eof);
-		if (!new->hd)
+		if (!new->hd || dt->exitstatus == 130)
 			return (freemlst(new), false);
 		return (true);
 	}

@@ -6,7 +6,7 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 22:38:23 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/22 04:05:46 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/22 19:05:18 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static char	*make_prompt(t_shell *data)
 
 	buffer = ft_strjoin("⊢", WTH);
 	buffer = ft_strdjoining(buffer, "[", PPL);
-	buffer = ft_strdjoining(buffer, "Foxy's Munch", WTH);
+	buffer = ft_strdjoining(buffer, data->usr, WTH);
 	buffer = ft_strdjoining(buffer, "]-[", GRN);
 	tmp = usr_to_tilde(data, data->pwd);
 	if (!tmp)
@@ -73,6 +73,7 @@ static char	*make_prompt(t_shell *data)
  */
 static void	prompt_rl(t_shell *data)
 {
+	data->path = get_path(data, data->envp);
 	data->prompt = make_prompt(data);
 	if (!data->prompt)
 		return ;
@@ -148,14 +149,12 @@ int	main(int argc, char **argv, char **envp)
 		if (!data.envp)
 			return (1);
 	}
+	data.usr = get_user();
 	init_pwd(&data);
 	shell_lvl(&data);
 	last_cmd_status(&data);
 	while (1)
 	{
-		data.path = get_path(&data, data.envp);
-		if (!data.path)
-			return (ft_freeall("%d%S", &data.envp, &data.ut), 1);
 		get_home(&data, data.envp);
 		prompt_rl(&data);
 	}

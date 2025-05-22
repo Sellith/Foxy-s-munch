@@ -6,7 +6,7 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 03:17:08 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/21 05:54:37 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/22 19:30:46 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ char	*cast_heredoc(char *ctn, t_arg *arg, t_shell *data)
 	- Sets up heredoc-specific signal handlers
 	- Reads heredoc content via cast_heredoc
 	- On failure, closes pipe write end, frees resources,
-		and returns error code 130
+	- If a SIGINT is detected exit and returns error code 130
 	- Writes heredoc content (including terminating null) to pipe write end
 	- Closes pipe write end, frees resources, and returns success (0)
 */

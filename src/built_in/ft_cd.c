@@ -6,7 +6,7 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 02:12:12 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/22 04:20:32 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/22 21:06:35 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static unsigned long	update_path(char *newpwd, t_shell *data)
 		return (1);
 	buffer = ft_strjoin(CD_STD_ERR, newpwd);
 	if (!buffer)
-		return (1);
+		return (0);
 	if (chdir(newpwd) == -1)
 		return (perror(buffer), ft_freeall("%s%s", &buffer, &newpwd), 1);
 	ft_freeall("%s%s", &buffer, &newpwd);
@@ -85,7 +85,7 @@ static char	*tilde_to_home(t_shell *data, char *cmd)
 		if (i == -1)
 			return (ft_printf("%e", CD_NO_HOME_ERR), NULL);
 	}
-	if (data->home)
+	if (data->home && *data->home)
 		return (ft_strdup(data->home));
 	return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 22:40:43 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/21 18:32:53 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/22 18:49:35 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,10 +120,11 @@ typedef struct s_shell
 	int				lsize;
 	int				pipes;
 	int				stdin_clone;
-	char			*home;
 	char			*prompt;
-	char			*pwd;
 	char			*old_pwd;
+	char			*pwd;
+	char			*home;
+	char			*usr;
 	t_pid			*pid;
 	t_mlst			*mlst;
 	t_utils			*ut;
