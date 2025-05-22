@@ -6,7 +6,7 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 21:20:22 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/21 23:07:43 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/22 04:18:46 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ void			exit_sig(t_shell *data);
 void			get_home(t_shell *data, char **envp);
 char			**get_path(t_shell *data, char **envp);
 int				search_env_var(char **envp, char *var);
+char			*get_user(void);
 
 /*debug functions*/
 
@@ -108,6 +109,7 @@ void			close_n_dup(t_mlst *lst, t_ctn *ctn, int p_fd[2], int tmpid);
 /*free all*/
 
 void			freelst(t_arg *arg);
+void			freepids(t_pid *pid);
 void			freemlst(t_mlst *mlst);
 void			freerpipe(t_shell *data);
 void			freerdoc(t_shell *data, t_mlst *new);

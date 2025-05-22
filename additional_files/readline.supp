@@ -15,10 +15,18 @@
    ...
 }
 {
-   <cmds>
+   <bin_cmds>
    Memcheck:Leak
    match-leak-kinds: all
    ...
-   fun:???
+   obj:/usr/bin/*
+   ...
+}
+{
+   <sbin_cmds>
+   Memcheck:Leak
+   match-leak-kinds: all
+   ...
+   obj:/usr/sbin/*
    ...
 }

@@ -6,11 +6,40 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 01:14:25 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/21 19:19:22 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/22 04:31:53 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.functions.h"
+
+/*
+	get_user - Retrieves the current username by executing 'whoami'.
+	Uses a pipe and fork to capture the command output.
+	Returns a malloc'd string with the username, or NULL on failure.
+*/
+char	*get_user(void)
+{
+	char	*user;
+	int		fd[2];
+	int		pid;
+
+	if (pipe(fd) == -1)
+		return (NULL);
+	pid = fork();
+	if (pid == -1)
+		return (ft_freeall("%c%c", &fd[0], &fd[1]), NULL);
+	closefds(fd, pid);
+	if (pid == 0)
+	{
+		dup2(fd[WRITE], STDOUT_FILENO);
+		ft_close(&fd[WRITE]);
+		execve("/bin/whoami", ft_addtoda(NULL, "whoami"), NULL);
+	}
+	user = get_n_close(fd[READ]);
+	user = ft_strnfdup(user, ft_strlen(user) - 1);
+	wait(&pid);
+	return (user);
+}
 
 /*
 	Tries to execute command by searching in all PATH directories.
@@ -47,13 +76,27 @@ static unsigned long	bff_path(t_shell *data, t_ctn *ctn)
 }
 
 /*
+	Frees all pids inside of the child process.
+ */
+void	freepids(t_pid *pid)
+{
+	t_pid	*tmp;
+
+	while (pid)
+	{
+		tmp = pid->next;
+		free(pid);
+		pid = tmp;
+	}
+}
+
+/*
 	Handles execution inside the child process after fork.
 	Sets default signal handling and closes stdin clone.
 	Executes builtin commands if detected.
 	If command is a path, tries execve and handles errors.
 	Otherwise, searches executable in PATH and handles errors.
 */
-
 static void	child_proc(t_shell *data, t_mlst *lst, t_ctn *ctn)
 {
 	unsigned long	errret;
@@ -65,14 +108,17 @@ static void	child_proc(t_shell *data, t_mlst *lst, t_ctn *ctn)
 	if (type != BINARY)
 	{
 		execbt(data, lst, ctn, type);
+		freepids(data->pid);
 		so_long_exec(data, data->exitstatus, NULL);
 	}
 	if (ctn->cmd_ctn[0][0] == '/' || ctn->cmd_ctn[0][0] == '.')
 	{
 		execve(ctn->cmd_ctn[0], ctn->cmd_ctn, data->envp);
+		freepids(data->pid);
 		errhdlg(data, ctn, errno);
 	}
 	errret = bff_path(data, ctn);
+	freepids(data->pid);
 	errhdlg(data, ctn, errret);
 }
 

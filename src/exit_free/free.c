@@ -6,7 +6,7 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/25 02:58:22 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/21 01:40:52 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/22 04:58:43 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,8 @@
 
 void	freerdoc(t_shell *data, t_mlst *new)
 {
-	free(data->prompt);
-	if (data->envp)
-		ft_freedarray(data->envp);
-	if (data->line)
-		ft_str_reset(&data->line);
+	ft_freeall("%s%s%s%s%s%d%d", &data->prompt, &data->line, &data->home,
+		&data->pwd, &data->old_pwd, &data->envp, &data->path);
 	if (data->mlst)
 		freemlst(data->mlst);
 	if (new)
@@ -28,15 +25,13 @@ void	freerdoc(t_shell *data, t_mlst *new)
 		reinit_ut(data->ut);
 		free(data->ut);
 	}
-	if (data->path)
-		ft_freedarray(data->path);
 	rl_clear_history();
 }
 
 void	freerpipe(t_shell *data)
 {
-	ft_freeall("%s%s%d%d%s%s", &data->prompt, &data->line, &data->envp,
-		&data->path, &data->old_pwd, &data->pwd);
+	ft_freeall("%s%s%d%d%s%s%s", &data->prompt, &data->line, &data->envp,
+		&data->path, &data->old_pwd, &data->pwd, &data->home);
 	if (data->mlst)
 		freemlst(data->mlst);
 	if (data->ut)

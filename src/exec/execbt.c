@@ -6,7 +6,7 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 22:15:31 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/21 18:14:01 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/22 03:55:54 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ static void	bt_select(t_shell *data, char **cmd, t_btins type, t_mlst *lst)
 	{
 		if (lst->ctn->inf_fd != -2)
 			ft_close(&data->stdin_clone);
+		freepids(data->pid);
 		data->exitstatus = ft_exit(data, cmd);
 	}
 	else if (type == BT_ENV)

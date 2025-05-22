@@ -6,7 +6,7 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 02:12:12 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/21 18:48:32 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/22 04:20:32 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,20 +87,39 @@ static char	*tilde_to_home(t_shell *data, char *cmd)
 	}
 	if (data->home)
 		return (ft_strdup(data->home));
-	ft_printf("%e", CD_NO_HOME_ERR);
 	return (NULL);
 }
 
 /*
-	This function dups the pwd until the last '/' to get to the parent
-	directory.
- */
-static char	*back_off(t_shell *data)
+	back_off - Handles relative path resolution starting with '../'.
+	Truncates the current working directory accordingly, and appends
+	the remaining part of the destination path.
+	Returns the resolved path or NULL on failure.
+*/
+static char	*back_off(t_shell *data, char *dest)
 {
-	char	*buffer;
+	char	*buff;
+	int		i;
 
-	buffer = ft_strndup(data->pwd, ft_revstrlen_til_char(data->pwd, '/'));
-	return (buffer);
+	buff = ft_strndup(data->pwd, ft_revstrlen_til_char(data->pwd, '/'));
+	if (dest[2] == '/' && dest[3])
+	{
+		i = 3;
+		while (dest[i] && (dest[i] == '.' || dest[i] == '/'))
+		{
+			if (dest[i] == '.' && dest[i + 1] == '.')
+			{
+				buff = ft_strnfdup(buff, ft_revstrlen_til_char(buff, '/'));
+				i += 2;
+			}
+			if (dest[i] != '/')
+				break ;
+			else
+				i++;
+		}
+		buff = ft_strdjoining(buff, "/", dest + i);
+	}
+	return (buff);
 }
 
 /*
@@ -129,7 +148,7 @@ unsigned long	ft_cd(char **cmd, t_shell *data)
 			if (ft_darraylen(cmd) == 1 || cmd[1][0] == '~')
 				buffer = tilde_to_home(data, cmd[1]);
 			else if (cmd[1][0] == '.' && cmd[1][1] == '.')
-				buffer = back_off(data);
+				buffer = back_off(data, cmd[1]);
 			else if (cmd[1][0] != '/')
 				buffer = ft_strdjoin(data->pwd, "/", cmd[1]);
 			else

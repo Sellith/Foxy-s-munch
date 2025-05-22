@@ -6,7 +6,7 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 15:30:23 by azhao             #+#    #+#             */
-/*   Updated: 2025/05/21 18:48:38 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/22 00:39:07 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 	This function check if the '-n' option is triggered to check if there will
 	be a newline.
  */
-bool	check_newline(char *str)
+bool	check_newline(bool *newline, char *str)
 {
 	unsigned int	i;
 
@@ -29,7 +29,10 @@ bool	check_newline(char *str)
 		while (str[i] && str[i] == 'n')
 			i++;
 		if (i == ft_strlen(str))
+		{
+			*newline = false;
 			return (false);
+		}
 	}
 	return (true);
 }
@@ -40,6 +43,29 @@ bool	check_newline(char *str)
 
 	Should there be a write error the function will return 1.
  */
+static unsigned long	do_write(int i, int count, char **cmd, bool newline)
+{
+	while (i < count)
+	{
+		if (write(1, cmd[i], ft_strlen(cmd[i])) == -1)
+			return (perror(ECHO_WRITE_ERR), 1);
+		if (i++ != count - 1)
+			if (write(1, " ", 1) == -1)
+				return (perror(ECHO_WRITE_ERR), 1);
+	}
+	if (newline == true)
+		if (write(1, "\n", 1) == -1)
+			return (perror(ECHO_WRITE_ERR), 1);
+	return (0);
+}
+
+/*
+	ft_echo - Mimics the behavior of the shell's echo command.
+	Parses -n flags to optionally suppress the trailing newline.
+	Calls do_write to output the remaining arguments.
+	Returns the command’s exit code (1 if there is a write error or 0 if
+	nothing happend).
+*/
 unsigned long	ft_echo(char **cmd)
 {
 	bool	newline;
@@ -48,20 +74,13 @@ unsigned long	ft_echo(char **cmd)
 
 	i = 1;
 	count = ft_darraylen(cmd);
-	newline = check_newline(cmd[i]);
-	if (!newline)
-		i++;
-	while (i < count)
+	newline = true;
+	while (cmd[i] && cmd[i][0] == '-')
 	{
-		if (write(1, cmd[i], ft_strlen(cmd[i])) == -1)
-			return (perror(ECHO_WRITE_ERR), 1);
-		if (i != count - 1)
-			if (write(1, " ", 1) == -1)
-				return (perror(ECHO_WRITE_ERR), 1);
-		++i;
+		if (!check_newline(&newline, cmd[i]))
+			i++;
+		else
+			break ;
 	}
-	if (newline == true)
-		if (write(1, "\n", 1) == -1)
-			return (perror(ECHO_WRITE_ERR), 1);
-	return (0);
+	return (do_write(i, count, cmd, newline));
 }

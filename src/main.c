@@ -6,7 +6,7 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 22:38:23 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/21 05:01:37 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/22 04:05:46 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,19 @@
 	Replaces the home directory path in pwd with '~' if applicable.
 	If pwd starts with data->home, it returns a new string replacing that
 	prefix by '~'.
-	Otherwise, returns a copy of pwd or shortened path starting with '~'.
+	Otherwise, returns a copy of pwd
 	Returns allocated string or NULL on failure.
  */
 static char	*usr_to_tilde(t_shell *data, char *pwd)
 {
 	char	*buffer;
-	int		skiplen;
 	int		cwdlen;
 	int		homelen;
+	int		var;
 
 	cwdlen = ft_strlen(pwd);
-	if (data->home)
+	var = search_env_var(data->envp, "HOME=");
+	if (var != -1 && ft_strlen(data->envp[var]) > 5)
 	{
 		homelen = ft_strlen(data->home);
 		if (data->home[homelen - 1] == '/')
@@ -37,13 +38,7 @@ static char	*usr_to_tilde(t_shell *data, char *pwd)
 		buffer = ft_strjoin("~", pwd + homelen);
 	}
 	else
-	{
-		homelen = 6;
-		if (cwdlen <= homelen)
-			return (ft_strdup(pwd));
-		skiplen = ft_strlen_til_char(pwd + homelen, '/') + homelen;
-		buffer = ft_strjoin("~", pwd + skiplen);
-	}
+		buffer = ft_strdup(pwd);
 	return (buffer);
 }
 

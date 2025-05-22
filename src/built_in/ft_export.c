@@ -6,7 +6,7 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 23:25:15 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/21 19:04:47 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/22 01:21:26 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,8 @@ unsigned long	do_export(char ***envp, char *str)
 	int		i;
 
 	i = 0;
+	if (!str || str[0] == '-')
+		return (ft_dprintf(STDERR_FILENO, "%s\n", EXP_OPT_ERR), 2);
 	if (!conditions(str))
 		return (1);
 	if (!ft_strchr(str, '='))
