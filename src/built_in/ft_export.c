@@ -6,41 +6,12 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 23:25:15 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/22 01:21:26 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/27 00:14:20 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.functions.h"
 
-/*
-	This function prints the environment in the format of the export command.
-	It skips the local variable "?=" since it's a local variable and handles
-	write errors.
-	Returns 1 on write error, 0 otherwise.
- */
-static unsigned long	export_env(char **env)
-{
-	int		i;
-
-	i = 0;
-	if (!env || !(*env)[0])
-		return (0);
-	while (env[i])
-	{
-		if (ft_strncmp(env[i], "?=", 2) == 0)
-			i++;
-		if (!env[i])
-			return (0);
-		if ((write(STDOUT_FILENO, "export ", 7)) == -1)
-			return (perror(EXPORT_WRITE_ERR), 1);
-		if (write(STDOUT_FILENO, env[i], ft_strlen(env[i])) == -1)
-			return (perror(EXPORT_WRITE_ERR), 1);
-		if ((write(STDOUT_FILENO, "\n", 1)) == -1)
-			return (perror(EXPORT_WRITE_ERR), 1);
-		i++;
-	}
-	return (0);
-}
 
 /*
 	This function checks if the given string is a valid variable name for export.
@@ -89,6 +60,22 @@ static bool	conditions(char *str)
 }
 
 /*
+	len - Computes the maximum length between a string up to '=' and a
+	given length.
+	Used to align environment variable display formatting.
+	Returns the greater of var's prefix length or the given length.
+*/
+static int	len(char *var, int strlen)
+{
+	int	varlen;
+
+	varlen = ft_strlen_til_char(var, '=');
+	if (varlen > strlen)
+		return (varlen);
+	return (strlen);
+}
+
+/*
 	This function adds or updates an environment variable in envp.
 	It first validates the variable format, then adds it if new,
 	or replaces the existing one if the name matches.
@@ -109,7 +96,7 @@ unsigned long	do_export(char ***envp, char *str)
 	if (!*envp)
 		*envp = ft_addtoda(NULL, str);
 	strlen = ft_strlen_til_char(str, '=');
-	while ((*envp)[i] && ft_strncmp((*envp)[i], str, strlen) != 0)
+	while ((*envp)[i] && ft_strncmp((*envp)[i], str, len((*envp)[i], strlen)))
 		i++;
 	if (!(*envp)[i])
 		*envp = ft_addtoda(*envp, str);
@@ -131,9 +118,10 @@ unsigned long	do_export(char ***envp, char *str)
 	Returns 0 if sucessfull and 1 if export_env fails
 	(errors are stored in data->exitstatus).
  */
-unsigned long	ft_export(t_shell *data, char	***envp, char **cmd)
+unsigned long	ft_export(char	***envp, char **cmd)
 {
 	unsigned long	res;
+	unsigned long	tmp;
 	int				i;
 
 	if (ft_darraylen(cmd) == 1)
@@ -143,9 +131,9 @@ unsigned long	ft_export(t_shell *data, char	***envp, char **cmd)
 		i = 1;
 		while (cmd[i])
 		{
-			res = do_export(envp, cmd[i]);
-			if (res != 0)
-				data->exitstatus = res;
+			tmp = do_export(envp, cmd[i]);
+			if (tmp != 0)
+				res = tmp;
 			i++;
 		}
 	}

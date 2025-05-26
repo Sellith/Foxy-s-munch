@@ -6,7 +6,7 @@
 #    By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/08 01:08:11 by lvan-bre          #+#    #+#              #
-#    Updated: 2025/05/22 19:28:42 by lvan-bre         ###   ########.fr        #
+#    Updated: 2025/05/27 00:00:09 by lvan-bre         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -80,7 +80,7 @@ SRC		=	main.c parsing/put_ctn.c parsing/parsing_utils.c parsing/parsing.c	\
 			exec/files.c exec/minishell.c exec/utils.c exec/err_msg.c 			\
 			built_in/ft_env.c built_in/ft_echo.c built_in/ft_pwd.c 				\
 			built_in/ft_export.c exec/execbt.c built_in/ft_unset.c				\
-			built_in/ft_cd.c built_in/ft_exit.c
+			built_in/ft_cd.c built_in/ft_exit.c built_in/ft_export_env.c
 
 
 #	OBJS CONVERSION

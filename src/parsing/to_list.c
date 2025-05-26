@@ -6,7 +6,7 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 07:38:07 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/21 19:17:45 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/26 23:43:12 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,7 +173,7 @@ bool	selec_tolkien(t_shell *dt, t_mlst *new, t_rdir rdir, t_io i_o)
 	}
 	if (!ret)
 	{
-		dt->exitstatus = 1;
+		dt->exitstatus = 2;
 		return (freemlst(new), false);
 	}
 	return (true);

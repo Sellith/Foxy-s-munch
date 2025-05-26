@@ -6,7 +6,7 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 22:15:31 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/22 03:55:54 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/27 00:12:37 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static void	bt_select(t_shell *data, char **cmd, t_btins type, t_mlst *lst)
 	else if (type == BT_PWD)
 		data->exitstatus = ft_pwd(data, cmd);
 	else if (type == BT_EXPORT)
-		data->exitstatus = ft_export(data, &data->envp, cmd);
+		data->exitstatus = ft_export(&data->envp, cmd);
 	else if (type == BT_UNSET)
 		data->exitstatus = ft_unset(cmd, data);
 }

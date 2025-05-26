@@ -6,7 +6,7 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 19:18:01 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/26 20:54:43 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/26 23:57:29 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,20 @@ static bool	ft_check_ulong_str(char *str)
 }
 
 /*
+	no_exit - Handles the case where 'exit' is called with too many arguments.
+	Prints an error message and resets the message string.
+	Returns 1 if exit code is 0, otherwise returns the given exit code.
+*/
+static int	no_exit(char **msg, unsigned long exitc)
+{
+	ft_dprintf(STDERR_FILENO, "%s%s\n", *msg, EXIT_ARGS_ERR);
+	ft_str_reset(msg);
+	if (exitc == 0)
+		return (1);
+	return (exitc);
+}
+
+/*
 	This function is the executing of ft_exit, checking the exit conditions:
 	if exit have no args it exits with the exit code of the former cmd
 	if exit have an first arg that's not numeric it exits with an exit code of 2
@@ -59,9 +73,9 @@ static bool	ft_check_ulong_str(char *str)
 unsigned long	ft_exit(t_shell *data, char **cmd)
 {
 	char			*msg;
-	unsigned long	exitcode;
+	unsigned long	exitc;
 
-	exitcode = data->exitstatus;
+	exitc = data->exitstatus;
 	if (data->pipes == 0)
 		msg = ft_strdup("exit\n");
 	else
@@ -73,14 +87,14 @@ unsigned long	ft_exit(t_shell *data, char **cmd)
 		so_long_exec(data, 2, msg);
 	}
 	else if (ft_darraylen(cmd) > 2)
-		return (ft_dprintf(2, "%s%s\n", msg, EXIT_ARGS_ERR), free(msg), 1);
+		return (no_exit(&msg, exitc));
 	else
 	{
 		ft_dprintf(STDERR_FILENO, "%s", msg);
 		if (cmd[1])
-			exitcode = ft_atoul(cmd[1]);
+			exitc = ft_atoul(cmd[1]);
 		ft_darray_reset(&cmd);
-		so_long_exec(data, exitcode % 256, msg);
+		so_long_exec(data, exitc % 256, msg);
 	}
 	return (0);
 }

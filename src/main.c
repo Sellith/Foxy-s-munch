@@ -6,7 +6,7 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 22:38:23 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/22 19:05:18 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/26 23:51:01 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,18 +80,18 @@ static void	prompt_rl(t_shell *data)
 	init_signals(S_INTERACTIVE);
 	data->line = readline(data->prompt);
 	init_signals(S_IGNORE);
+	if (g_sig != 0)
+		exit_sig(data);
 	if (!data->line)
 		return (so_long_minishell(data, data->exitstatus));
 	if (ft_strlen(data->line) != 0)
 		add_history(data->line);
-	if (g_sig != 0)
-		exit_sig(data);
 	if (ft_strlen(data->line) != 0 && parsing(data))
 	{
 		data->stdin_clone = dup(STDIN_FILENO);
 		minishell(data, data->mlst);
-		last_cmd_status(data);
 	}
+	last_cmd_status(data);
 	reset_data(data, &data->mlst);
 }
 

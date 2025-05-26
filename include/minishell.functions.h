@@ -6,7 +6,7 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 21:20:22 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/22 18:52:00 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/27 00:12:18 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,9 @@ char			*rm_from_line(t_shell *dt, char *line);
 
 /*build ins*/
 
+unsigned long	export_env(char **env);
 unsigned long	do_export(char ***envp, char *str);
-unsigned long	ft_export(t_shell *data, char	***envp, char **cmd);
+unsigned long	ft_export(char	***envp, char **cmd);
 unsigned long	ft_unset(char **cmd, t_shell *data);
 unsigned long	ft_exit(t_shell *data, char **cmd);
 unsigned long	ft_pwd(t_shell *data, char **cmd);
