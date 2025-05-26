@@ -6,7 +6,7 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 19:18:01 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/22 00:04:26 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/26 20:54:43 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ static bool	ft_check_ulong_str(char *str)
 	if (ft_isnum(str[0]) && i <= 20
 		&& ft_strncmp("9223372036854775807", str, 20) < 0)
 		return (false);
-
 	return (true);
 }
 
