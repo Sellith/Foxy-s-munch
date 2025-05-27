@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
+/*   By: sellith <sellith@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 23:25:15 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/27 00:14:20 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/05/27 15:24:36 by sellith          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,6 +124,7 @@ unsigned long	ft_export(char	***envp, char **cmd)
 	unsigned long	tmp;
 	int				i;
 
+	res = 0;
 	if (ft_darraylen(cmd) == 1)
 		return (export_env(*envp));
 	else
@@ -137,5 +138,5 @@ unsigned long	ft_export(char	***envp, char **cmd)
 			i++;
 		}
 	}
-	return (0);
+	return (res);
 }
