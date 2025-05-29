@@ -6,15 +6,13 @@
 #    By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/08 01:08:11 by lvan-bre          #+#    #+#              #
-#    Updated: 2025/05/27 00:00:09 by lvan-bre         ###   ########.fr        #
+#    Updated: 2025/05/30 00:23:26 by lvan-bre         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-#	VARIABLES
-
 # COMPILATION
 
-CC					:=	cc
+CC					:=	gcc
 CFLAGS				:=	-Wextra -Wall -Werror -g
 RLFLAGS				:=	-lreadline
 VALFLAGS			:=	--leak-check=full --show-leak-kinds=all --track-fds=yes --trace-children=yes --track-origins=yes --suppressions=/home/lvan-bre/Tronc_commun/Foxy_munch/additional_files/readline.supp
@@ -36,7 +34,7 @@ ARCH				:=	$(BIN)/archives
 
 # TARGET
 
-TARGET				:=	Mini_Shell
+TARGET				:=	minishell
 NAME				:=	$(BIN)/$(TARGET)
 TARGET_H			:=	minishell.h
 
