@@ -5,7 +5,7 @@ test.c
 .vscode/
 test.txt
 test/
-include/ft_printf.h
-include/get_next_line.h
-include/libft.h
-Depedencies/
+# include/ft_printf.h
+# include/get_next_line.h
+# include/libft.h
+# Depedencies/
