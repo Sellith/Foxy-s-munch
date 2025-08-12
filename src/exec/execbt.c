@@ -6,7 +6,7 @@
 /*   By: lvan-bre <lvan-bre@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 22:15:31 by lvan-bre          #+#    #+#             */
-/*   Updated: 2025/05/27 00:12:37 by lvan-bre         ###   ########.fr       */
+/*   Updated: 2025/08/12 20:18:48 by lvan-bre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,15 +49,16 @@ static void	bt_select(t_shell *data, char **cmd, t_btins type, t_mlst *lst)
 */
 static bool	init_bt_exec(t_shell *data, t_mlst *lst, int std[2], t_btins type)
 {
-	if (!open_allfiles(lst))
-	{
-		data->exitstatus = 1;
-		return (false);
-	}
 	if (type != BT_EXIT)
 	{
 		std[0] = dup(STDIN_FILENO);
 		std[1] = dup(STDOUT_FILENO);
+		return (true);
+	}
+	if (!open_allfiles(lst))
+	{
+		data->exitstatus = 1;
+		return (false);
 	}
 	return (true);
 }
